@@ -4,7 +4,7 @@ metadata:
   name: argocd-notifications-cm
   namespace: argocd
   uid: b2752558-eee7-4d3b-8f03-e635bbf7c6a4
-  resourceVersion: "92033"
+  resourceVersion: "95844"
   creationTimestamp: "2022-10-02T16:58:01Z"
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: >
@@ -268,14 +268,6 @@ metadata:
       fieldsV1:
         f:data:
           .: {}
-          f:template.app-created: {}
-          f:template.app-deleted: {}
-          f:template.app-deployed: {}
-          f:template.app-health-degraded: {}
-          f:template.app-sync-failed: {}
-          f:template.app-sync-running: {}
-          f:template.app-sync-status-unknown: {}
-          f:template.app-sync-succeeded: {}
           f:trigger.on-created: {}
           f:trigger.on-deleted: {}
           f:trigger.on-deployed: {}
@@ -291,14 +283,20 @@ metadata:
     - manager: node-fetch
       operation: Update
       apiVersion: v1
-      time: "2022-11-10T11:02:52Z"
+      time: "2022-11-10T12:30:53Z"
       fieldsType: FieldsV1
       fieldsV1:
         f:data:
-          f:service.webhook.kmi-simple: {}
+          f:service.webhook.simple-webserver: {}
           f:subscriptions: {}
-          f:template.kmi-sync-status-change: {}
-          f:trigger.kmi-on-status-change: {}
+          f:template.app-created: {}
+          f:template.app-deleted: {}
+          f:template.app-deployed: {}
+          f:template.app-health-degraded: {}
+          f:template.app-sync-failed: {}
+          f:template.app-sync-running: {}
+          f:template.app-sync-status-unknown: {}
+          f:template.app-sync-succeeded: {}
   selfLink: /api/v1/namespaces/argocd/configmaps/argocd-notifications-cm
 data:
   service.webhook.simple-webserver: |
