@@ -4,7 +4,7 @@ metadata:
   name: argocd-notifications-cm
   namespace: argocd
   uid: b2752558-eee7-4d3b-8f03-e635bbf7c6a4
-  resourceVersion: "95844"
+  resourceVersion: "101619"
   creationTimestamp: "2022-10-02T16:58:01Z"
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: >
@@ -283,7 +283,7 @@ metadata:
     - manager: node-fetch
       operation: Update
       apiVersion: v1
-      time: "2022-11-10T12:30:53Z"
+      time: "2022-11-10T14:42:37Z"
       fieldsType: FieldsV1
       fieldsV1:
         f:data:
@@ -300,7 +300,7 @@ metadata:
   selfLink: /api/v1/namespaces/argocd/configmaps/argocd-notifications-cm
 data:
   service.webhook.simple-webserver: |
-    url: http://172.17.0.9:8000
+    url: http://172.17.0.9:8000/events
   subscriptions: |
     - recipients:
       - simple-webserver
@@ -317,7 +317,7 @@ data:
     webhook:
       app-created-webhook:
         method: GET
-        path: ?event=app-created
+        path: /events?event=app-created
     email:
       subject: Application {{.app.metadata.name}} has been created.
     message: Application {{.app.metadata.name}} has been created.
@@ -327,7 +327,7 @@ data:
     webhook:
       app-deleted-webhook:
         method: GET
-        path: ?event=app-deleted
+        path: /events?event=app-deleted
     email:
       subject: Application {{.app.metadata.name}} has been deleted.
     message: Application {{.app.metadata.name}} has been deleted.
@@ -337,7 +337,7 @@ data:
     webhook:
       app-deployed-webhook:
         method: GET
-        path: ?event=app-deployed
+        path: /events?event=app-deployed
     email:
       subject: New version of an application {{.app.metadata.name}} is up and running.
     message: |
@@ -424,7 +424,7 @@ data:
     webhook:
       app-health-degraded-webhook:
         method: GET
-        path: ?event=app-health-degraded
+        path: /events?event=app-health-degraded
     email:
       subject: Application {{.app.metadata.name}} has degraded.
     message: |
@@ -503,7 +503,7 @@ data:
     webhook:
       app-sync-failed-webhook:
         method: GET
-        path: ?event=app-sync-failed
+        path: /events?event=app-sync-failed
     email:
       subject: Failed to sync application {{.app.metadata.name}}.
     message: |
@@ -586,7 +586,7 @@ data:
     webhook:
       app-sync-running-webhook:
         method: GET
-        path: ?event=app-sync-running
+        path: /events?event=app-sync-running
     email:
       subject: Start syncing application {{.app.metadata.name}}.
     message: |
@@ -668,7 +668,7 @@ data:
     webhook:
       app-sync-status-unknown-webhook:
         method: GET
-        path: ?event=app-sync-status-unknown
+        path: /events?event=app-sync-status-unknown
     email:
       subject: Application {{.app.metadata.name}} sync status is 'Unknown'
     message: |
@@ -750,8 +750,12 @@ data:
   template.app-sync-succeeded: |
     webhook:
       app-sync-succeeded-webhook:
-        method: GET
-        path: ?event=app-sync-succeeded
+        method: POST
+        body: |
+          {
+            "application": {{.app.metadata.name}},
+            "operationState": {{.app.status.operationState.phase}}
+          }
     email:
       subject: Application {{.app.metadata.name}} has been successfully synced.
     message: |
