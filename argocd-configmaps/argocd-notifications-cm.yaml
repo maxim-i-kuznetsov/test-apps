@@ -301,13 +301,21 @@ metadata:
           f:trigger.kmi-on-status-change: {}
   selfLink: /api/v1/namespaces/argocd/configmaps/argocd-notifications-cm
 data:
-  service.webhook.kmi-simple: |
+  service.webhook.simple-webserver: |
     url: http://172.17.0.9:8000
   subscriptions: |
     - recipients:
-      - kmi-simple
+      - simple-webserver
       triggers:
-      - kmi-on-status-change
+      - on-sync-failed
+      - on-sync-running
+      - on-sync-status-unknown
+      - on-sync-succeeded
+  # subscriptions: |
+  #   - recipients:
+  #     - simple-webserver
+  #     triggers:
+  #     - kmi-on-status-change
   template.app-created: |
     email:
       subject: Application {{.app.metadata.name}} has been created.
@@ -479,6 +487,10 @@ data:
       themeColor: '#FF0000'
       title: Application {{.app.metadata.name}} has degraded.
   template.app-sync-failed: |
+    webhook:
+      app-sync-failed-webhook:
+        method: GET
+        path: ?event=app-sync-failed
     email:
       subject: Failed to sync application {{.app.metadata.name}}.
     message: |
@@ -558,6 +570,10 @@ data:
       themeColor: '#FF0000'
       title: Failed to sync application {{.app.metadata.name}}.
   template.app-sync-running: |
+    webhook:
+      app-sync-running-webhook:
+        method: GET
+        path: ?event=app-sync-running
     email:
       subject: Start syncing application {{.app.metadata.name}}.
     message: |
@@ -636,6 +652,10 @@ data:
         }]
       title: Start syncing application {{.app.metadata.name}}.
   template.app-sync-status-unknown: |
+    webhook:
+      app-sync-status-unknown-webhook:
+        method: GET
+        path: ?event=app-sync-status-unknown
     email:
       subject: Application {{.app.metadata.name}} sync status is 'Unknown'
     message: |
@@ -715,6 +735,10 @@ data:
         }]
       title: Application {{.app.metadata.name}} sync status is 'Unknown'
   template.app-sync-succeeded: |
+    webhook:
+      app-sync-succeeded-webhook:
+        method: GET
+        path: ?event=app-sync-succeeded
     email:
       subject: Application {{.app.metadata.name}} has been successfully synced.
     message: |
@@ -793,21 +817,21 @@ data:
         }]
       themeColor: '#000080'
       title: Application {{.app.metadata.name}} has been successfully synced
-  template.kmi-sync-status-change: |
-    webhook:
-      sync-status-webhook:
-        method: POST
-        body: |
-          {
-            "state": {{ .app.status.operationState.phase }}
-            "description": "ArgoCD",
-            "target_url": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}"
-          }
-  trigger.kmi-on-status-change: |
-    - description: Application syncing status change
-      send:
-      - kmi-sync-status-change
-      when: app.status.operationState.phase in ['Succeeded', 'Running', 'Error', 'Failed']
+  # template.kmi-sync-status-change: |
+  #   webhook:
+  #     sync-status-webhook:
+  #       method: POST
+  #       body: |
+  #         {
+  #           "state": {{ .app.status.operationState.phase }}
+  #           "description": "ArgoCD",
+  #           "target_url": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}"
+  #         }
+  # trigger.kmi-on-status-change: |
+  #   - description: Application syncing status change
+  #     send:
+  #     - kmi-sync-status-change
+  #     when: app.status.operationState.phase in ['Succeeded', 'Running', 'Error', 'Failed']
   trigger.on-created: |
     - description: Application is created.
       oncePer: app.metadata.name
