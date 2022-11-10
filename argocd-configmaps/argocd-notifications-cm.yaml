@@ -307,28 +307,39 @@ data:
     - recipients:
       - simple-webserver
       triggers:
+      - on-created
+      - on-deleted
+      - on-deployed
+      - on-health-degraded
       - on-sync-failed
       - on-sync-running
       - on-sync-status-unknown
       - on-sync-succeeded
-  # subscriptions: |
-  #   - recipients:
-  #     - simple-webserver
-  #     triggers:
-  #     - kmi-on-status-change
   template.app-created: |
+    webhook:
+      app-created-webhook:
+        method: GET
+        path: ?event=app-created
     email:
       subject: Application {{.app.metadata.name}} has been created.
     message: Application {{.app.metadata.name}} has been created.
     teams:
       title: Application {{.app.metadata.name}} has been created.
   template.app-deleted: |
+    webhook:
+      app-deleted-webhook:
+        method: GET
+        path: ?event=app-deleted
     email:
       subject: Application {{.app.metadata.name}} has been deleted.
     message: Application {{.app.metadata.name}} has been deleted.
     teams:
       title: Application {{.app.metadata.name}} has been deleted.
   template.app-deployed: |
+    webhook:
+      app-deployed-webhook:
+        method: GET
+        path: ?event=app-deployed
     email:
       subject: New version of an application {{.app.metadata.name}} is up and running.
     message: |
@@ -412,6 +423,10 @@ data:
       themeColor: '#000080'
       title: New version of an application {{.app.metadata.name}} is up and running.
   template.app-health-degraded: |
+    webhook:
+      app-health-degraded-webhook:
+        method: GET
+        path: ?event=app-health-degraded
     email:
       subject: Application {{.app.metadata.name}} has degraded.
     message: |
@@ -817,21 +832,6 @@ data:
         }]
       themeColor: '#000080'
       title: Application {{.app.metadata.name}} has been successfully synced
-  # template.kmi-sync-status-change: |
-  #   webhook:
-  #     sync-status-webhook:
-  #       method: POST
-  #       body: |
-  #         {
-  #           "state": {{ .app.status.operationState.phase }}
-  #           "description": "ArgoCD",
-  #           "target_url": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}"
-  #         }
-  # trigger.kmi-on-status-change: |
-  #   - description: Application syncing status change
-  #     send:
-  #     - kmi-sync-status-change
-  #     when: app.status.operationState.phase in ['Succeeded', 'Running', 'Error', 'Failed']
   trigger.on-created: |
     - description: Application is created.
       oncePer: app.metadata.name
