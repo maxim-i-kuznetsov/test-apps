@@ -4,7 +4,7 @@ metadata:
   name: argocd-notifications-cm
   namespace: argocd
   uid: b2752558-eee7-4d3b-8f03-e635bbf7c6a4
-  resourceVersion: "101619"
+  resourceVersion: "108815"
   creationTimestamp: "2022-10-02T16:58:01Z"
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: >
@@ -283,11 +283,18 @@ metadata:
     - manager: node-fetch
       operation: Update
       apiVersion: v1
-      time: "2022-11-10T14:42:37Z"
+      time: "2022-11-11T09:21:18Z"
       fieldsType: FieldsV1
       fieldsV1:
         f:data:
-          f:service.webhook.simple-webserver: {}
+          f:service.webhook.simple-webserver-on-created: {}
+          f:service.webhook.simple-webserver-on-deleted: {}
+          f:service.webhook.simple-webserver-on-deployed: {}
+          f:service.webhook.simple-webserver-on-health-degraded: {}
+          f:service.webhook.simple-webserver-on-sync-failed: {}
+          f:service.webhook.simple-webserver-on-sync-running: {}
+          f:service.webhook.simple-webserver-on-sync-status-unknown: {}
+          f:service.webhook.simple-webserver-on-sync-succeeded: {}
           f:subscriptions: {}
           f:template.app-created: {}
           f:template.app-deleted: {}
@@ -299,25 +306,63 @@ metadata:
           f:template.app-sync-succeeded: {}
   selfLink: /api/v1/namespaces/argocd/configmaps/argocd-notifications-cm
 data:
-  service.webhook.simple-webserver: |
-    url: http://172.17.0.9:8000/events
+  service.webhook.simple-webserver-on-created: |
+    url: http://172.17.0.4:8000/events/on-created
+  service.webhook.simple-webserver-on-deleted: |
+    url: http://172.17.0.4:8000/events/on-deleted
+  service.webhook.simple-webserver-on-deployed: |
+    url: http://172.17.0.4:8000/events/on-deployed
+  service.webhook.simple-webserver-on-health-degraded: |
+    url: http://172.17.0.4:8000/events/on-health-degraded
+  service.webhook.simple-webserver-on-sync-failed: |
+    url: http://172.17.0.4:8000/events/on-sync-failed
+  service.webhook.simple-webserver-on-sync-running: |
+    url: http://172.17.0.4:8000/events/on-sync-running
+  service.webhook.simple-webserver-on-sync-status-unknown: |
+    url: http://172.17.0.4:8000/events/on-sync-status-unknown
+  service.webhook.simple-webserver-on-sync-succeeded: |
+    url: http://172.17.0.4:8000/events/on-sync-succeeded
   subscriptions: |
     - recipients:
-      - simple-webserver
+      - simple-webserver-on-created
       triggers:
       - on-created
+    - recipients:
+      - simple-webserver-on-deleted
+      triggers:
       - on-deleted
+    - recipients:
+      - simple-webserver-on-deployed
+      triggers:
       - on-deployed
+    - recipients:
+      - simple-webserver-on-health-degraded
+      triggers:
       - on-health-degraded
+    - recipients:
+      - simple-webserver-on-sync-failed
+      triggers:
       - on-sync-failed
+    - recipients:
+      - simple-webserver-on-sync-running
+      triggers:
       - on-sync-running
+    - recipients:
+      - simple-webserver-on-sync-status-unknown
+      triggers:
       - on-sync-status-unknown
+    - recipients:
+      - simple-webserver-on-sync-succeeded
+      triggers:
       - on-sync-succeeded
   template.app-created: |
     webhook:
-      app-created-webhook:
-        method: GET
-        path: /events?event=app-created
+      simple-webserver-on-created:
+        method: POST
+        body: |
+          {
+            "message": "Application {{.app.metadata.name}} has been created."
+          }
     email:
       subject: Application {{.app.metadata.name}} has been created.
     message: Application {{.app.metadata.name}} has been created.
@@ -325,9 +370,12 @@ data:
       title: Application {{.app.metadata.name}} has been created.
   template.app-deleted: |
     webhook:
-      app-deleted-webhook:
-        method: GET
-        path: /events?event=app-deleted
+      simple-webserver-on-deleted:
+        method: POST
+        body: |
+          {
+            "message": "Application {{.app.metadata.name}} has been deleted."
+          }
     email:
       subject: Application {{.app.metadata.name}} has been deleted.
     message: Application {{.app.metadata.name}} has been deleted.
@@ -335,9 +383,12 @@ data:
       title: Application {{.app.metadata.name}} has been deleted.
   template.app-deployed: |
     webhook:
-      app-deployed-webhook:
-        method: GET
-        path: /events?event=app-deployed
+      simple-webserver-on-deployed:
+        method: POST
+        body: |
+          {
+            "message": "New version of an application {{.app.metadata.name}} is up and running."
+          }
     email:
       subject: New version of an application {{.app.metadata.name}} is up and running.
     message: |
@@ -422,9 +473,12 @@ data:
       title: New version of an application {{.app.metadata.name}} is up and running.
   template.app-health-degraded: |
     webhook:
-      app-health-degraded-webhook:
-        method: GET
-        path: /events?event=app-health-degraded
+      simple-webserver-on-health-degraded:
+        method: POST
+        body: |
+          {
+            "message": "Application {{.app.metadata.name}} has degraded."
+          }
     email:
       subject: Application {{.app.metadata.name}} has degraded.
     message: |
@@ -501,9 +555,12 @@ data:
       title: Application {{.app.metadata.name}} has degraded.
   template.app-sync-failed: |
     webhook:
-      app-sync-failed-webhook:
-        method: GET
-        path: /events?event=app-sync-failed
+      simple-webserver-on-sync-failed:
+        method: POST
+        body: |
+          {
+            "message": "Failed to sync application {{.app.metadata.name}}."
+          }
     email:
       subject: Failed to sync application {{.app.metadata.name}}.
     message: |
@@ -584,9 +641,12 @@ data:
       title: Failed to sync application {{.app.metadata.name}}.
   template.app-sync-running: |
     webhook:
-      app-sync-running-webhook:
-        method: GET
-        path: /events?event=app-sync-running
+      simple-webserver-on-sync-running:
+        method: POST
+        body: |
+          {
+            "message": "Start syncing application {{.app.metadata.name}}."
+          }
     email:
       subject: Start syncing application {{.app.metadata.name}}.
     message: |
@@ -666,9 +726,12 @@ data:
       title: Start syncing application {{.app.metadata.name}}.
   template.app-sync-status-unknown: |
     webhook:
-      app-sync-status-unknown-webhook:
-        method: GET
-        path: /events?event=app-sync-status-unknown
+      simple-webserver-on-sync-status-unknown:
+        method: POST
+        body: |
+          {
+            "message": "Application {{.app.metadata.name}} sync status is 'Unknown'"
+          }
     email:
       subject: Application {{.app.metadata.name}} sync status is 'Unknown'
     message: |
@@ -749,12 +812,11 @@ data:
       title: Application {{.app.metadata.name}} sync status is 'Unknown'
   template.app-sync-succeeded: |
     webhook:
-      app-sync-succeeded-webhook:
+      simple-webserver-on-sync-succeeded:
         method: POST
         body: |
           {
-            "application": {{.app.metadata.name}},
-            "operationState": {{.app.status.operationState.phase}}
+            "message": "Application {{.app.metadata.name}} has been successfully synced."
           }
     email:
       subject: Application {{.app.metadata.name}} has been successfully synced.
