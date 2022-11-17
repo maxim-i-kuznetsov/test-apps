@@ -4,7 +4,7 @@ metadata:
   name: argocd-notifications-cm
   namespace: argocd
   uid: b2752558-eee7-4d3b-8f03-e635bbf7c6a4
-  resourceVersion: "108815"
+  resourceVersion: "127962"
   creationTimestamp: "2022-10-02T16:58:01Z"
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: >
@@ -283,18 +283,11 @@ metadata:
     - manager: node-fetch
       operation: Update
       apiVersion: v1
-      time: "2022-11-11T09:21:18Z"
+      time: "2022-11-17T16:37:55Z"
       fieldsType: FieldsV1
       fieldsV1:
         f:data:
-          f:service.webhook.simple-webserver-on-created: {}
-          f:service.webhook.simple-webserver-on-deleted: {}
-          f:service.webhook.simple-webserver-on-deployed: {}
-          f:service.webhook.simple-webserver-on-health-degraded: {}
-          f:service.webhook.simple-webserver-on-sync-failed: {}
-          f:service.webhook.simple-webserver-on-sync-running: {}
-          f:service.webhook.simple-webserver-on-sync-status-unknown: {}
-          f:service.webhook.simple-webserver-on-sync-succeeded: {}
+          f:service.webhook.simple-webserver: {}
           f:subscriptions: {}
           f:template.app-created: {}
           f:template.app-deleted: {}
@@ -302,600 +295,246 @@ metadata:
           f:template.app-health-degraded: {}
           f:template.app-sync-failed: {}
           f:template.app-sync-running: {}
+          f:template.app-sync-status-outOfSync: {}
           f:template.app-sync-status-unknown: {}
           f:template.app-sync-succeeded: {}
+          f:trigger.on-sync-status-outOfSync: {}
   selfLink: /api/v1/namespaces/argocd/configmaps/argocd-notifications-cm
 data:
-  service.webhook.simple-webserver-on-created: |
-    url: http://172.17.0.4:8000/events/on-created
-  service.webhook.simple-webserver-on-deleted: |
-    url: http://172.17.0.4:8000/events/on-deleted
-  service.webhook.simple-webserver-on-deployed: |
-    url: http://172.17.0.4:8000/events/on-deployed
-  service.webhook.simple-webserver-on-health-degraded: |
-    url: http://172.17.0.4:8000/events/on-health-degraded
-  service.webhook.simple-webserver-on-sync-failed: |
-    url: http://172.17.0.4:8000/events/on-sync-failed
-  service.webhook.simple-webserver-on-sync-running: |
-    url: http://172.17.0.4:8000/events/on-sync-running
-  service.webhook.simple-webserver-on-sync-status-unknown: |
-    url: http://172.17.0.4:8000/events/on-sync-status-unknown
-  service.webhook.simple-webserver-on-sync-succeeded: |
-    url: http://172.17.0.4:8000/events/on-sync-succeeded
+  service.webhook.simple-webserver: |
+    url: http://172.17.0.3:8000/events
   subscriptions: |
     - recipients:
-      - simple-webserver-on-created
+      - simple-webserver
       triggers:
       - on-created
-    - recipients:
-      - simple-webserver-on-deleted
-      triggers:
       - on-deleted
-    - recipients:
-      - simple-webserver-on-deployed
-      triggers:
       - on-deployed
-    - recipients:
-      - simple-webserver-on-health-degraded
-      triggers:
       - on-health-degraded
-    - recipients:
-      - simple-webserver-on-sync-failed
-      triggers:
       - on-sync-failed
-    - recipients:
-      - simple-webserver-on-sync-running
-      triggers:
       - on-sync-running
-    - recipients:
-      - simple-webserver-on-sync-status-unknown
-      triggers:
       - on-sync-status-unknown
-    - recipients:
-      - simple-webserver-on-sync-succeeded
-      triggers:
       - on-sync-succeeded
+      - on-sync-status-outOfSync
   template.app-created: |
     webhook:
-      simple-webserver-on-created:
+      simple-webserver:
         method: POST
         body: |
           {
+            "event": "on-app-created"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}"
             "message": "Application {{.app.metadata.name}} has been created."
           }
-    email:
-      subject: Application {{.app.metadata.name}} has been created.
     message: Application {{.app.metadata.name}} has been created.
-    teams:
-      title: Application {{.app.metadata.name}} has been created.
   template.app-deleted: |
     webhook:
       simple-webserver-on-deleted:
         method: POST
         body: |
           {
+            "event": "on-app-deleted"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}"
             "message": "Application {{.app.metadata.name}} has been deleted."
           }
-    email:
-      subject: Application {{.app.metadata.name}} has been deleted.
     message: Application {{.app.metadata.name}} has been deleted.
-    teams:
-      title: Application {{.app.metadata.name}} has been deleted.
   template.app-deployed: |
     webhook:
-      simple-webserver-on-deployed:
+      simple-webserver:
         method: POST
         body: |
           {
+            "event": "on-app-deployed"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}"
             "message": "New version of an application {{.app.metadata.name}} is up and running."
           }
-    email:
-      subject: New version of an application {{.app.metadata.name}} is up and running.
     message: |
-      {{if eq .serviceType "slack"}}:white_check_mark:{{end}} Application {{.app.metadata.name}} is now running new version of deployments manifests.
-    slack:
-      attachments: |
-        [{
-          "title": "{{ .app.metadata.name}}",
-          "title_link":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
-          "color": "#18be52",
-          "fields": [
-          {
-            "title": "Sync Status",
-            "value": "{{.app.status.sync.status}}",
-            "short": true
-          },
-          {
-            "title": "Repository",
-            "value": "{{.app.spec.source.repoURL}}",
-            "short": true
-          },
-          {
-            "title": "Revision",
-            "value": "{{.app.status.sync.revision}}",
-            "short": true
-          }
-          {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "title": "{{$c.type}}",
-            "value": "{{$c.message}}",
-            "short": true
-          }
-          {{end}}
-          ]
-        }]
-      deliveryPolicy: Post
-      groupingKey: ""
-      notifyBroadcast: false
-    teams:
-      facts: |
-        [{
-          "name": "Sync Status",
-          "value": "{{.app.status.sync.status}}"
-        },
-        {
-          "name": "Repository",
-          "value": "{{.app.spec.source.repoURL}}"
-        },
-        {
-          "name": "Revision",
-          "value": "{{.app.status.sync.revision}}"
-        }
-        {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "name": "{{$c.type}}",
-            "value": "{{$c.message}}"
-          }
-        {{end}}
-        ]
-      potentialAction: |-
-        [{
-          "@type":"OpenUri",
-          "name":"Operation Application",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}"
-          }]
-        },
-        {
-          "@type":"OpenUri",
-          "name":"Open Repository",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
-          }]
-        }]
-      themeColor: '#000080'
-      title: New version of an application {{.app.metadata.name}} is up and running.
+      Application {{.app.metadata.name}} is now running new version of deployments manifests.
   template.app-health-degraded: |
     webhook:
-      simple-webserver-on-health-degraded:
+      simple-webserver:
         method: POST
         body: |
           {
+            "event": "on-app-health-degraded"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}"
             "message": "Application {{.app.metadata.name}} has degraded."
           }
-    email:
-      subject: Application {{.app.metadata.name}} has degraded.
     message: |
-      {{if eq .serviceType "slack"}}:exclamation:{{end}} Application {{.app.metadata.name}} has degraded.
+      Application {{.app.metadata.name}} has degraded.
       Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
-    slack:
-      attachments: |
-        [{
-          "title": "{{ .app.metadata.name}}",
-          "title_link": "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
-          "color": "#f4c030",
-          "fields": [
-          {
-            "title": "Health Status",
-            "value": "{{.app.status.health.status}}",
-            "short": true
-          },
-          {
-            "title": "Repository",
-            "value": "{{.app.spec.source.repoURL}}",
-            "short": true
-          }
-          {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "title": "{{$c.type}}",
-            "value": "{{$c.message}}",
-            "short": true
-          }
-          {{end}}
-          ]
-        }]
-      deliveryPolicy: Post
-      groupingKey: ""
-      notifyBroadcast: false
-    teams:
-      facts: |
-        [{
-          "name": "Health Status",
-          "value": "{{.app.status.health.status}}"
-        },
-        {
-          "name": "Repository",
-          "value": "{{.app.spec.source.repoURL}}"
-        }
-        {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "name": "{{$c.type}}",
-            "value": "{{$c.message}}"
-          }
-        {{end}}
-        ]
-      potentialAction: |
-        [{
-          "@type":"OpenUri",
-          "name":"Open Application",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}"
-          }]
-        },
-        {
-          "@type":"OpenUri",
-          "name":"Open Repository",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
-          }]
-        }]
-      themeColor: '#FF0000'
-      title: Application {{.app.metadata.name}} has degraded.
   template.app-sync-failed: |
     webhook:
-      simple-webserver-on-sync-failed:
+      simple-webserver:
         method: POST
         body: |
           {
-            "message": "Failed to sync application {{.app.metadata.name}}."
+            "event": "on-sync-failed"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}" 
+            "message": "The sync operation of application {{.app.metadata.name}} has failed at {{.app.status.operationState.finishedAt}} with the following error {{.app.status.operationState.message}}."
           }
-    email:
-      subject: Failed to sync application {{.app.metadata.name}}.
     message: |
-      {{if eq .serviceType "slack"}}:exclamation:{{end}}  The sync operation of application {{.app.metadata.name}} has failed at {{.app.status.operationState.finishedAt}} with the following error: {{.app.status.operationState.message}}
+      The sync operation of application {{.app.metadata.name}} has failed at {{.app.status.operationState.finishedAt}} with the following error: {{.app.status.operationState.message}}
       Sync operation details are available at: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true .
-    slack:
-      attachments: |
-        [{
-          "title": "{{ .app.metadata.name}}",
-          "title_link":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
-          "color": "#E96D76",
-          "fields": [
-          {
-            "title": "Sync Status",
-            "value": "{{.app.status.sync.status}}",
-            "short": true
-          },
-          {
-            "title": "Repository",
-            "value": "{{.app.spec.source.repoURL}}",
-            "short": true
-          }
-          {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "title": "{{$c.type}}",
-            "value": "{{$c.message}}",
-            "short": true
-          }
-          {{end}}
-          ]
-        }]
-      deliveryPolicy: Post
-      groupingKey: ""
-      notifyBroadcast: false
-    teams:
-      facts: |
-        [{
-          "name": "Sync Status",
-          "value": "{{.app.status.sync.status}}"
-        },
-        {
-          "name": "Failed at",
-          "value": "{{.app.status.operationState.finishedAt}}"
-        },
-        {
-          "name": "Repository",
-          "value": "{{.app.spec.source.repoURL}}"
-        }
-        {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "name": "{{$c.type}}",
-            "value": "{{$c.message}}"
-          }
-        {{end}}
-        ]
-      potentialAction: |-
-        [{
-          "@type":"OpenUri",
-          "name":"Open Operation",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
-          }]
-        },
-        {
-          "@type":"OpenUri",
-          "name":"Open Repository",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
-          }]
-        }]
-      themeColor: '#FF0000'
-      title: Failed to sync application {{.app.metadata.name}}.
   template.app-sync-running: |
     webhook:
-      simple-webserver-on-sync-running:
+      simple-webserver:
         method: POST
         body: |
           {
+            "event": "on-sync-running"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}"
             "message": "Start syncing application {{.app.metadata.name}}."
           }
-    email:
-      subject: Start syncing application {{.app.metadata.name}}.
     message: |
       The sync operation of application {{.app.metadata.name}} has started at {{.app.status.operationState.startedAt}}.
       Sync operation details are available at: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true .
-    slack:
-      attachments: |
-        [{
-          "title": "{{ .app.metadata.name}}",
-          "title_link":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
-          "color": "#0DADEA",
-          "fields": [
+  template.app-sync-status-outOfSync: |
+    webhook:
+      simple-webserver:
+        method: POST
+        body: |
           {
-            "title": "Sync Status",
-            "value": "{{.app.status.sync.status}}",
-            "short": true
-          },
-          {
-            "title": "Repository",
-            "value": "{{.app.spec.source.repoURL}}",
-            "short": true
+            "event": "on-sync-status-outOfSync"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}"
+            "message": "Application {{.app.metadata.name}} sync status is 'OutOfSync'"
           }
-          {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "title": "{{$c.type}}",
-            "value": "{{$c.message}}",
-            "short": true
-          }
-          {{end}}
-          ]
-        }]
-      deliveryPolicy: Post
-      groupingKey: ""
-      notifyBroadcast: false
-    teams:
-      facts: |
-        [{
-          "name": "Sync Status",
-          "value": "{{.app.status.sync.status}}"
-        },
-        {
-          "name": "Started at",
-          "value": "{{.app.status.operationState.startedAt}}"
-        },
-        {
-          "name": "Repository",
-          "value": "{{.app.spec.source.repoURL}}"
-        }
-        {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "name": "{{$c.type}}",
-            "value": "{{$c.message}}"
-          }
-        {{end}}
-        ]
-      potentialAction: |-
-        [{
-          "@type":"OpenUri",
-          "name":"Open Operation",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
-          }]
-        },
-        {
-          "@type":"OpenUri",
-          "name":"Open Repository",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
-          }]
-        }]
-      title: Start syncing application {{.app.metadata.name}}.
+    message: |
+      "Application {{.app.metadata.name}} sync status is 'OutOfSync'"
   template.app-sync-status-unknown: |
     webhook:
-      simple-webserver-on-sync-status-unknown:
+      simple-webserver:
         method: POST
         body: |
           {
+            "event": "on-sync-status-unknown"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}"
             "message": "Application {{.app.metadata.name}} sync status is 'Unknown'"
           }
-    email:
-      subject: Application {{.app.metadata.name}} sync status is 'Unknown'
     message: |
-      {{if eq .serviceType "slack"}}:exclamation:{{end}} Application {{.app.metadata.name}} sync is 'Unknown'.
+      Application {{.app.metadata.name}} sync is 'Unknown'.
       Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
-      {{if ne .serviceType "slack"}}
-      {{range $c := .app.status.conditions}}
-          * {{$c.message}}
-      {{end}}
-      {{end}}
-    slack:
-      attachments: |
-        [{
-          "title": "{{ .app.metadata.name}}",
-          "title_link":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
-          "color": "#E96D76",
-          "fields": [
-          {
-            "title": "Sync Status",
-            "value": "{{.app.status.sync.status}}",
-            "short": true
-          },
-          {
-            "title": "Repository",
-            "value": "{{.app.spec.source.repoURL}}",
-            "short": true
-          }
-          {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "title": "{{$c.type}}",
-            "value": "{{$c.message}}",
-            "short": true
-          }
-          {{end}}
-          ]
-        }]
-      deliveryPolicy: Post
-      groupingKey: ""
-      notifyBroadcast: false
-    teams:
-      facts: |
-        [{
-          "name": "Sync Status",
-          "value": "{{.app.status.sync.status}}"
-        },
-        {
-          "name": "Repository",
-          "value": "{{.app.spec.source.repoURL}}"
-        }
-        {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "name": "{{$c.type}}",
-            "value": "{{$c.message}}"
-          }
-        {{end}}
-        ]
-      potentialAction: |-
-        [{
-          "@type":"OpenUri",
-          "name":"Open Application",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}"
-          }]
-        },
-        {
-          "@type":"OpenUri",
-          "name":"Open Repository",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
-          }]
-        }]
-      title: Application {{.app.metadata.name}} sync status is 'Unknown'
   template.app-sync-succeeded: |
     webhook:
-      simple-webserver-on-sync-succeeded:
+      simple-webserver:
         method: POST
         body: |
           {
+            "event": "on-sync-succeeded"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "revision": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "operationStarted": "{{.app.status.operationState.startedAt}}"
+            "operationFinished": "{{.app.status.operationState.finishedAt}}"
+            "operationPhase": "{{.app.status.operationState.phase}}"
+            "operationMessage": "{{.app.status.operationState.message}}"
             "message": "Application {{.app.metadata.name}} has been successfully synced."
           }
-    email:
-      subject: Application {{.app.metadata.name}} has been successfully synced.
     message: |
-      {{if eq .serviceType "slack"}}:white_check_mark:{{end}} Application {{.app.metadata.name}} has been successfully synced at {{.app.status.operationState.finishedAt}}.
+      Application {{.app.metadata.name}} has been successfully synced at {{.app.status.operationState.finishedAt}}.
       Sync operation details are available at: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true .
-    slack:
-      attachments: |
-        [{
-          "title": "{{ .app.metadata.name}}",
-          "title_link":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}",
-          "color": "#18be52",
-          "fields": [
-          {
-            "title": "Sync Status",
-            "value": "{{.app.status.sync.status}}",
-            "short": true
-          },
-          {
-            "title": "Repository",
-            "value": "{{.app.spec.source.repoURL}}",
-            "short": true
-          }
-          {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "title": "{{$c.type}}",
-            "value": "{{$c.message}}",
-            "short": true
-          }
-          {{end}}
-          ]
-        }]
-      deliveryPolicy: Post
-      groupingKey: ""
-      notifyBroadcast: false
-    teams:
-      facts: |
-        [{
-          "name": "Sync Status",
-          "value": "{{.app.status.sync.status}}"
-        },
-        {
-          "name": "Synced at",
-          "value": "{{.app.status.operationState.finishedAt}}"
-        },
-        {
-          "name": "Repository",
-          "value": "{{.app.spec.source.repoURL}}"
-        }
-        {{range $index, $c := .app.status.conditions}}
-          {{if not $index}},{{end}}
-          {{if $index}},{{end}}
-          {
-            "name": "{{$c.type}}",
-            "value": "{{$c.message}}"
-          }
-        {{end}}
-        ]
-      potentialAction: |-
-        [{
-          "@type":"OpenUri",
-          "name":"Operation Details",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
-          }]
-        },
-        {
-          "@type":"OpenUri",
-          "name":"Open Repository",
-          "targets":[{
-            "os":"default",
-            "uri":"{{.app.spec.source.repoURL | call .repo.RepoURLToHTTPS}}"
-          }]
-        }]
-      themeColor: '#000080'
-      title: Application {{.app.metadata.name}} has been successfully synced
   trigger.on-created: |
     - description: Application is created.
       oncePer: app.metadata.name
@@ -930,6 +569,11 @@ data:
       send:
       - app-sync-running
       when: app.status.operationState.phase in ['Running']
+  trigger.on-sync-status-outOfSync: |
+    - description: Application status is 'OutOfSync'
+      send:
+      - app-sync-status-outOfSync
+      when: app.status.sync.status == 'OutOfSync'
   trigger.on-sync-status-unknown: |
     - description: Application status is 'Unknown'
       send:
