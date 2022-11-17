@@ -1,0 +1,369 @@
+{
+  "metadata":
+    {
+      "name": "guestbook-ui",
+      "namespace": "argocd",
+      "uid": "05ce4bb6-bc1a-418a-8e7d-79c83f49cf5a",
+      "resourceVersion": "129029",
+      "generation": 243,
+      "creationTimestamp": "2022-11-17T13:10:37Z",
+      "annotations":
+        {
+          "notified.notifications.argoproj.io": '{"81a85a9d4f547beabc4e1ec5be6bf0f80b7eab0d:on-deployed:[0].y7b5sbwa2Q329JYH755peeq-fBs:simple-webserver-on-deployed:":1668690637,"81a85a9d4f547beabc4e1ec5be6bf0f80b7eab0d:on-deployed:[0].y7b5sbwa2Q329JYH755peeq-fBs:simple-webserver:":1668692416,"f10fac5c9cceab9f437e781f0deefb7582a05600:on-deployed:[0].y7b5sbwa2Q329JYH755peeq-fBs:simple-webserver:":1668704353,"guestbook-ui:on-created:[0].X_5TO4MPCKAyY0ipFgr6_IraRNs:simple-webserver-on-created:":1668690637,"guestbook-ui:on-created:[0].X_5TO4MPCKAyY0ipFgr6_IraRNs:simple-webserver:":1668692416,"on-sync-succeeded:[0].zxM90Et6k4Elb1-fHdjtDJq0xR0:simple-webserver-on-sync-succeeded:":1668690716,"on-sync-succeeded:[0].zxM90Et6k4Elb1-fHdjtDJq0xR0:simple-webserver:":1668704446}',
+        },
+      "finalizers": ["resources-finalizer.argocd.argoproj.io"],
+      "managedFields":
+        [
+          {
+            "manager": "Go-http-client",
+            "operation": "Update",
+            "apiVersion": "argoproj.io/v1alpha1",
+            "time": "2022-11-17T17:00:46Z",
+            "fieldsType": "FieldsV1",
+            "fieldsV1":
+              {
+                "f:metadata":
+                  {
+                    "f:finalizers":
+                      {
+                        ".": {},
+                        'v:"resources-finalizer.argocd.argoproj.io"': {},
+                      },
+                  },
+                "f:spec":
+                  {
+                    ".": {},
+                    "f:destination":
+                      { ".": {}, "f:namespace": {}, "f:server": {} },
+                    "f:project": {},
+                    "f:source":
+                      {
+                        ".": {},
+                        "f:directory":
+                          { ".": {}, "f:jsonnet": {}, "f:recurse": {} },
+                        "f:path": {},
+                        "f:repoURL": {},
+                        "f:targetRevision": {},
+                      },
+                    "f:syncPolicy":
+                      {
+                        ".": {},
+                        "f:automated":
+                          { ".": {}, "f:prune": {}, "f:selfHeal": {} },
+                      },
+                  },
+                "f:status":
+                  {
+                    ".": {},
+                    "f:health": {},
+                    "f:summary": {},
+                    "f:sync":
+                      {
+                        ".": {},
+                        "f:comparedTo":
+                          { ".": {}, "f:destination": {}, "f:source": {} },
+                      },
+                  },
+              },
+          },
+          {
+            "manager": "argocd-application-controller",
+            "operation": "Update",
+            "apiVersion": "argoproj.io/v1alpha1",
+            "time": "2022-11-17T17:00:46Z",
+            "fieldsType": "FieldsV1",
+            "fieldsV1":
+              {
+                "f:status":
+                  {
+                    "f:health": { "f:status": {} },
+                    "f:history": {},
+                    "f:operationState":
+                      {
+                        ".": {},
+                        "f:finishedAt": {},
+                        "f:message": {},
+                        "f:operation":
+                          {
+                            ".": {},
+                            "f:initiatedBy": { ".": {}, "f:username": {} },
+                            "f:retry": {},
+                            "f:sync":
+                              {
+                                ".": {},
+                                "f:revision": {},
+                                "f:syncStrategy": { ".": {}, "f:hook": {} },
+                              },
+                          },
+                        "f:phase": {},
+                        "f:startedAt": {},
+                        "f:syncResult":
+                          {
+                            ".": {},
+                            "f:resources": {},
+                            "f:revision": {},
+                            "f:source":
+                              {
+                                ".": {},
+                                "f:directory":
+                                  { ".": {}, "f:jsonnet": {}, "f:recurse": {} },
+                                "f:path": {},
+                                "f:repoURL": {},
+                                "f:targetRevision": {},
+                              },
+                          },
+                      },
+                    "f:reconciledAt": {},
+                    "f:resources": {},
+                    "f:sourceType": {},
+                    "f:summary": { "f:images": {} },
+                    "f:sync":
+                      {
+                        "f:comparedTo":
+                          {
+                            "f:destination":
+                              { "f:namespace": {}, "f:server": {} },
+                            "f:source":
+                              {
+                                "f:directory":
+                                  { ".": {}, "f:jsonnet": {}, "f:recurse": {} },
+                                "f:path": {},
+                                "f:repoURL": {},
+                                "f:targetRevision": {},
+                              },
+                          },
+                        "f:revision": {},
+                        "f:status": {},
+                      },
+                  },
+              },
+          },
+          {
+            "manager": "argocd-notifications-controller",
+            "operation": "Update",
+            "apiVersion": "argoproj.io/v1alpha1",
+            "time": "2022-11-17T17:00:46Z",
+            "fieldsType": "FieldsV1",
+            "fieldsV1":
+              {
+                "f:metadata":
+                  {
+                    "f:annotations":
+                      { ".": {}, "f:notified.notifications.argoproj.io": {} },
+                  },
+              },
+          },
+        ],
+    },
+  "spec":
+    {
+      "source":
+        {
+          "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+          "path": "argocdproj-guestbook/yaml",
+          "targetRevision": "HEAD",
+          "directory": { "recurse": true, "jsonnet": {} },
+        },
+      "destination":
+        {
+          "server": "https://kubernetes.default.svc",
+          "namespace": "argocd-test",
+        },
+      "project": "argocd-test-apps",
+      "syncPolicy": { "automated": { "prune": true, "selfHeal": true } },
+    },
+  "status":
+    {
+      "resources":
+        [
+          {
+            "version": "v1",
+            "kind": "Service",
+            "namespace": "argocd-test",
+            "name": "guestbook-ui",
+            "status": "Synced",
+            "health": { "status": "Healthy" },
+          },
+          {
+            "group": "apps",
+            "version": "v1",
+            "kind": "Deployment",
+            "namespace": "argocd-test",
+            "name": "guestbook-ui",
+            "status": "Synced",
+            "health": { "status": "Healthy" },
+          },
+        ],
+      "sync":
+        {
+          "status": "Synced",
+          "comparedTo":
+            {
+              "source":
+                {
+                  "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                  "path": "argocdproj-guestbook/yaml",
+                  "targetRevision": "HEAD",
+                  "directory": { "recurse": true, "jsonnet": {} },
+                },
+              "destination":
+                {
+                  "server": "https://kubernetes.default.svc",
+                  "namespace": "argocd-test",
+                },
+            },
+          "revision": "f10fac5c9cceab9f437e781f0deefb7582a05600",
+        },
+      "health": { "status": "Healthy" },
+      "history":
+        [
+          {
+            "revision": "81a85a9d4f547beabc4e1ec5be6bf0f80b7eab0d",
+            "deployedAt": "2022-11-17T13:10:37Z",
+            "id": 0,
+            "source":
+              {
+                "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                "path": "argocdproj-guestbook/yaml",
+                "targetRevision": "HEAD",
+                "directory": { "recurse": true, "jsonnet": {} },
+              },
+            "deployStartedAt": "2022-11-17T13:10:37Z",
+          },
+          {
+            "revision": "81a85a9d4f547beabc4e1ec5be6bf0f80b7eab0d",
+            "deployedAt": "2022-11-17T14:32:20Z",
+            "id": 1,
+            "source":
+              {
+                "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                "path": "argocdproj-guestbook/yaml",
+                "targetRevision": "HEAD",
+                "directory": { "recurse": true, "jsonnet": {} },
+              },
+            "deployStartedAt": "2022-11-17T14:32:19Z",
+          },
+          {
+            "revision": "81a85a9d4f547beabc4e1ec5be6bf0f80b7eab0d",
+            "deployedAt": "2022-11-17T15:03:30Z",
+            "id": 2,
+            "source":
+              {
+                "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                "path": "argocdproj-guestbook/yaml",
+                "targetRevision": "HEAD",
+                "directory": { "recurse": true, "jsonnet": {} },
+              },
+            "deployStartedAt": "2022-11-17T15:03:30Z",
+          },
+          {
+            "revision": "81a85a9d4f547beabc4e1ec5be6bf0f80b7eab0d",
+            "deployedAt": "2022-11-17T16:25:30Z",
+            "id": 3,
+            "source":
+              {
+                "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                "path": "argocdproj-guestbook/yaml",
+                "targetRevision": "HEAD",
+                "directory": { "recurse": true, "jsonnet": {} },
+              },
+            "deployStartedAt": "2022-11-17T16:25:30Z",
+          },
+          {
+            "revision": "81a85a9d4f547beabc4e1ec5be6bf0f80b7eab0d",
+            "deployedAt": "2022-11-17T16:50:57Z",
+            "id": 4,
+            "source":
+              {
+                "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                "path": "argocdproj-guestbook/yaml",
+                "targetRevision": "HEAD",
+                "directory": { "recurse": true, "jsonnet": {} },
+              },
+            "deployStartedAt": "2022-11-17T16:50:56Z",
+          },
+          {
+            "revision": "f10fac5c9cceab9f437e781f0deefb7582a05600",
+            "deployedAt": "2022-11-17T16:59:12Z",
+            "id": 5,
+            "source":
+              {
+                "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                "path": "argocdproj-guestbook/yaml",
+                "targetRevision": "HEAD",
+                "directory": { "recurse": true, "jsonnet": {} },
+              },
+            "deployStartedAt": "2022-11-17T16:59:12Z",
+          },
+          {
+            "revision": "f10fac5c9cceab9f437e781f0deefb7582a05600",
+            "deployedAt": "2022-11-17T17:00:46Z",
+            "id": 6,
+            "source":
+              {
+                "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                "path": "argocdproj-guestbook/yaml",
+                "targetRevision": "HEAD",
+                "directory": { "recurse": true, "jsonnet": {} },
+              },
+            "deployStartedAt": "2022-11-17T17:00:46Z",
+          },
+        ],
+      "reconciledAt": "2022-11-17T17:00:46Z",
+      "operationState":
+        {
+          "operation":
+            {
+              "sync":
+                {
+                  "revision": "f10fac5c9cceab9f437e781f0deefb7582a05600",
+                  "syncStrategy": { "hook": {} },
+                },
+              "initiatedBy": { "username": "admin" },
+              "retry": {},
+            },
+          "phase": "Succeeded",
+          "message": "successfully synced (all tasks run)",
+          "syncResult":
+            {
+              "resources":
+                [
+                  {
+                    "group": "",
+                    "version": "v1",
+                    "kind": "Service",
+                    "namespace": "argocd-test",
+                    "name": "guestbook-ui",
+                    "status": "Synced",
+                    "message": "service/guestbook-ui unchanged",
+                    "hookPhase": "Running",
+                    "syncPhase": "Sync",
+                  },
+                  {
+                    "group": "apps",
+                    "version": "v1",
+                    "kind": "Deployment",
+                    "namespace": "argocd-test",
+                    "name": "guestbook-ui",
+                    "status": "Synced",
+                    "message": "deployment.apps/guestbook-ui unchanged",
+                    "hookPhase": "Running",
+                    "syncPhase": "Sync",
+                  },
+                ],
+              "revision": "f10fac5c9cceab9f437e781f0deefb7582a05600",
+              "source":
+                {
+                  "repoURL": "https://github.com/maxim-i-kuznetsov/test-apps.git",
+                  "path": "argocdproj-guestbook/yaml",
+                  "targetRevision": "HEAD",
+                  "directory": { "recurse": true, "jsonnet": {} },
+                },
+            },
+          "startedAt": "2022-11-17T17:00:46Z",
+          "finishedAt": "2022-11-17T17:00:46Z",
+        },
+      "sourceType": "Directory",
+      "summary": { "images": ["gcr.io/heptio-images/ks-guestbook-demo:0.2"] },
+    },
+}
