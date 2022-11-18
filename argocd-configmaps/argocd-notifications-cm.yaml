@@ -329,7 +329,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "message": "Application {{.app.metadata.name}} has been created."
           }
     message: Application {{.app.metadata.name}} has been created.
@@ -346,7 +346,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "message": "Application {{.app.metadata.name}} has been deleted."
           }
     message: Application {{.app.metadata.name}} has been deleted.
@@ -363,7 +363,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
@@ -388,7 +388,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "message": "Application {{.app.metadata.name}} has degraded."
@@ -409,7 +409,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
@@ -450,7 +450,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
@@ -476,7 +476,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
@@ -516,7 +516,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
@@ -557,7 +557,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "repoRevision": "{{.app.spec.source.targetRevision}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
@@ -579,7 +579,7 @@ data:
                     },
                     {{end}}
                   ]
-              }
+              }              
             "message": "Application {{.app.metadata.name}} has been successfully synced."
           }
     message: |
