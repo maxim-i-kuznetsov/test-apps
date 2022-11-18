@@ -4,7 +4,7 @@ metadata:
   name: argocd-notifications-cm
   namespace: argocd
   uid: b2752558-eee7-4d3b-8f03-e635bbf7c6a4
-  resourceVersion: "127962"
+  resourceVersion: "129014"
   creationTimestamp: "2022-10-02T16:58:01Z"
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: >
@@ -283,7 +283,7 @@ metadata:
     - manager: node-fetch
       operation: Update
       apiVersion: v1
-      time: "2022-11-17T16:37:55Z"
+      time: "2022-11-17T17:00:38Z"
       fieldsType: FieldsV1
       fieldsV1:
         f:data:
@@ -302,7 +302,7 @@ metadata:
   selfLink: /api/v1/namespaces/argocd/configmaps/argocd-notifications-cm
 data:
   service.webhook.simple-webserver: |
-    url: http://172.17.0.3:8000/events
+    url: http://172.17.0.11:8000/events
   subscriptions: |
     - recipients:
       - simple-webserver
@@ -329,19 +329,13 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
-            "syncStatus": "{{.app.status.sync.status}}"
-            "healthStatus": "{{.app.status.health.status}}"
-            "operationStarted": "{{.app.status.operationState.startedAt}}"
-            "operationFinished": "{{.app.status.operationState.finishedAt}}"
-            "operationPhase": "{{.app.status.operationState.phase}}"
-            "operationMessage": "{{.app.status.operationState.message}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "message": "Application {{.app.metadata.name}} has been created."
           }
     message: Application {{.app.metadata.name}} has been created.
   template.app-deleted: |
     webhook:
-      simple-webserver-on-deleted:
+      simple-webserver:
         method: POST
         body: |
           {
@@ -352,13 +346,7 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
-            "syncStatus": "{{.app.status.sync.status}}"
-            "healthStatus": "{{.app.status.health.status}}"
-            "operationStarted": "{{.app.status.operationState.startedAt}}"
-            "operationFinished": "{{.app.status.operationState.finishedAt}}"
-            "operationPhase": "{{.app.status.operationState.phase}}"
-            "operationMessage": "{{.app.status.operationState.message}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "message": "Application {{.app.metadata.name}} has been deleted."
           }
     message: Application {{.app.metadata.name}} has been deleted.
@@ -375,13 +363,14 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
             "operationFinished": "{{.app.status.operationState.finishedAt}}"
             "operationPhase": "{{.app.status.operationState.phase}}"
             "operationMessage": "{{.app.status.operationState.message}}"
+            "initiatedBy": "{{.app.status.operationState.operation.initiatedBy.username}}"
             "message": "New version of an application {{.app.metadata.name}} is up and running."
           }
     message: |
@@ -399,13 +388,9 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
-            "operationStarted": "{{.app.status.operationState.startedAt}}"
-            "operationFinished": "{{.app.status.operationState.finishedAt}}"
-            "operationPhase": "{{.app.status.operationState.phase}}"
-            "operationMessage": "{{.app.status.operationState.message}}"
             "message": "Application {{.app.metadata.name}} has degraded."
           }
     message: |
@@ -424,13 +409,29 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
             "operationFinished": "{{.app.status.operationState.finishedAt}}"
             "operationPhase": "{{.app.status.operationState.phase}}"
             "operationMessage": "{{.app.status.operationState.message}}" 
+            "initiatedBy": "{{.app.status.operationState.operation.initiatedBy.username}}"
+            "syncResult": |
+              {
+                "revision": "{{.app.status.operationState.syncResult.revision}}"
+                "resources": |
+                  [
+                    {{range $index, $res := .app.status.operationState.syncResult.resources}}
+                    {
+                      "name": "{{$res.name}}"
+                      "kind": "{{$res.kind}}"
+                      "status": "{{$res.status}}"
+                      "message": "{{$res.message}}"
+                    },
+                    {{end}}
+                  ]
+              }
             "message": "The sync operation of application {{.app.metadata.name}} has failed at {{.app.status.operationState.finishedAt}} with the following error {{.app.status.operationState.message}}."
           }
     message: |
@@ -449,13 +450,14 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
             "operationFinished": "{{.app.status.operationState.finishedAt}}"
             "operationPhase": "{{.app.status.operationState.phase}}"
             "operationMessage": "{{.app.status.operationState.message}}"
+            "initiatedBy": "{{.app.status.operationState.operation.initiatedBy.username}}"
             "message": "Start syncing application {{.app.metadata.name}}."
           }
     message: |
@@ -474,13 +476,29 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
             "operationFinished": "{{.app.status.operationState.finishedAt}}"
             "operationPhase": "{{.app.status.operationState.phase}}"
             "operationMessage": "{{.app.status.operationState.message}}"
+            "initiatedBy": "{{.app.status.operationState.operation.initiatedBy.username}}"
+            "syncResult": |
+              {
+                "revision": "{{.app.status.operationState.syncResult.revision}}"
+                "resources": |
+                  [
+                    {{range $index, $res := .app.status.operationState.syncResult.resources}}
+                    {
+                      "name": "{{$res.name}}"
+                      "kind": "{{$res.kind}}"
+                      "status": "{{$res.status}}"
+                      "message": "{{$res.message}}"
+                    },
+                    {{end}}
+                  ]
+              }
             "message": "Application {{.app.metadata.name}} sync status is 'OutOfSync'"
           }
     message: |
@@ -498,13 +516,29 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
             "operationFinished": "{{.app.status.operationState.finishedAt}}"
             "operationPhase": "{{.app.status.operationState.phase}}"
             "operationMessage": "{{.app.status.operationState.message}}"
+            "initiatedBy": "{{.app.status.operationState.operation.initiatedBy.username}}"
+            "syncResult": |
+              {
+                "revision": "{{.app.status.operationState.syncResult.revision}}"
+                "resources": |
+                  [
+                    {{range $index, $res := .app.status.operationState.syncResult.resources}}
+                    {
+                      "name": "{{$res.name}}"
+                      "kind": "{{$res.kind}}"
+                      "status": "{{$res.status}}"
+                      "message": "{{$res.message}}"
+                    },
+                    {{end}}
+                  ]
+              }
             "message": "Application {{.app.metadata.name}} sync status is 'Unknown'"
           }
     message: |
@@ -523,13 +557,29 @@ data:
             "namespace": "{{.app.spec.destination.namespace}}"
             "repoURL": "{{.app.spec.source.repoURL}}"
             "repoPath": "{{.app.spec.source.path}}"
-            "revision": "{{.app.spec.source.targetRevision}}"
+            "repoRevision": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
             "operationStarted": "{{.app.status.operationState.startedAt}}"
             "operationFinished": "{{.app.status.operationState.finishedAt}}"
             "operationPhase": "{{.app.status.operationState.phase}}"
             "operationMessage": "{{.app.status.operationState.message}}"
+            "initiatedBy": "{{.app.status.operationState.operation.initiatedBy.username}}"
+            "syncResult": |
+              {
+                "revision": "{{.app.status.operationState.syncResult.revision}}"
+                "resources": |
+                  [
+                    {{range $index, $res := .app.status.operationState.syncResult.resources}}
+                    {
+                      "name": "{{$res.name}}"
+                      "kind": "{{$res.kind}}"
+                      "status": "{{$res.status}}"
+                      "message": "{{$res.message}}"
+                    },
+                    {{end}}
+                  ]
+              }
             "message": "Application {{.app.metadata.name}} has been successfully synced."
           }
     message: |
@@ -552,8 +602,7 @@ data:
       oncePer: app.status.operationState.syncResult.revision
       send:
       - app-deployed
-      when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status
-        == 'Healthy'
+      when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
   trigger.on-health-degraded: |
     - description: Application has degraded
       send:
