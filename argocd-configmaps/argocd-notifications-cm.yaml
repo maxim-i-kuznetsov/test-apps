@@ -311,6 +311,9 @@ data:
       - on-deleted
       - on-deployed
       - on-health-degraded
+      - on-health-suspended
+      - on-health-progressing
+      - on-health-healthy
       - on-sync-failed
       - on-sync-running
       - on-sync-status-unknown
@@ -391,11 +394,118 @@ data:
             "repoBranch": "{{.app.spec.source.targetRevision}}"
             "syncStatus": "{{.app.status.sync.status}}"
             "healthStatus": "{{.app.status.health.status}}"
+            "healthResources": |
+              [
+                {{range $index, $res := .app.status.resources}}
+                {
+                  "name": "{{$res.name}}"
+                  "kind": "{{$res.kind}}"
+                  "status": "{{$res.status}}"
+                  "health": "{{$res.health.status}}"
+                  "message": "{{$res.message}}"
+                },
+                {{end}}
+              ]
             "message": "Application {{.app.metadata.name}} has degraded."
           }
     message: |
       Application {{.app.metadata.name}} has degraded.
-      Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
+  template.app-health-suspended: |
+    webhook:
+      simple-webserver:
+        method: POST
+        body: |
+          {
+            "event": "on-app-health-suspended"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "healthResources": |
+              [
+                {{range $index, $res := .app.status.resources}}
+                {
+                  "name": "{{$res.name}}"
+                  "kind": "{{$res.kind}}"
+                  "status": "{{$res.status}}"
+                  "health": "{{$res.health.status}}"
+                  "message": "{{$res.message}}"
+                },
+                {{end}}
+              ]
+            "message": "Application {{.app.metadata.name}} has suspended."
+          }
+    message: |
+      Application {{.app.metadata.name}} has suspended.
+  template.app-health-progressing: |
+    webhook:
+      simple-webserver:
+        method: POST
+        body: |
+          {
+            "event": "on-app-health-progressing"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "healthResources": |
+              [
+                {{range $index, $res := .app.status.resources}}
+                {
+                  "name": "{{$res.name}}"
+                  "kind": "{{$res.kind}}"
+                  "status": "{{$res.status}}"
+                  "health": "{{$res.health.status}}"
+                  "message": "{{$res.message}}"
+                },
+                {{end}}
+              ]
+            "message": "Application {{.app.metadata.name}} has health progressing."
+          }
+    message: |
+      Application {{.app.metadata.name}} has health progressing.
+  template.app-health-healthy: |
+    webhook:
+      simple-webserver:
+        method: POST
+        body: |
+          {
+            "event": "on-app-health-healthy"
+            "application": "{{.app.metadata.name}}"
+            "project": "{{.app.spec.project}}"
+            "cluster": "{{.app.spec.destination.server}}"
+            "namespace": "{{.app.spec.destination.namespace}}"
+            "repoURL": "{{.app.spec.source.repoURL}}"
+            "repoPath": "{{.app.spec.source.path}}"
+            "repoBranch": "{{.app.spec.source.targetRevision}}"
+            "syncStatus": "{{.app.status.sync.status}}"
+            "healthStatus": "{{.app.status.health.status}}"
+            "healthResources": |
+              [
+                {{range $index, $res := .app.status.resources}}
+                {
+                  "name": "{{$res.name}}"
+                  "kind": "{{$res.kind}}"
+                  "status": "{{$res.status}}"
+                  "health": "{{$res.health.status}}"
+                  "message": "{{$res.message}}"
+                },
+                {{end}}
+              ]
+            "message": "Application {{.app.metadata.name}} has hhealthy."
+          }
+    message: |
+      Application {{.app.metadata.name}} has healthy.
   template.app-sync-failed: |
     webhook:
       simple-webserver:
@@ -608,6 +718,21 @@ data:
       send:
       - app-health-degraded
       when: app.status.health.status == 'Degraded'
+  trigger.on-health-suspended: |
+    - description: Application has suspended
+      send:
+      - app-health-suspended
+      when: app.status.health.status == 'Suspended'
+  trigger.on-health-progressing: |
+    - description: Application has progressing
+      send:
+      - app-health-progressing
+      when: app.status.health.status == 'Progressing'
+  trigger.on-health-healthy: |
+    - description: Application has healthy
+      send:
+      - app-health-healthy
+      when: app.status.health.status == 'Healthy'
   trigger.on-sync-failed: |
     - description: Application syncing has failed
       send:
