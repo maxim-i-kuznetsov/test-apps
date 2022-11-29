@@ -7,32 +7,22 @@ metadata:
   name: fluent-bit-cm
   namespace: argocd-test
 data:
-  filter.conf: |
-    [FILTER]
-        Name    grep
-        Match   kube.*
+  parsers.conf: |-
+    [PARSER]
+        Name        docker
+        Format      json
   fluent-bit.conf: |
     [SERVICE]
-        Flush         1
-        Log_Level     info
-        Daemon        off
-        Parsers_File  parsers.conf
-    @INCLUDE filter.conf
-    @INCLUDE input.conf
-    @INCLUDE output.conf
-  input.conf: |
+        Flush 1
+        Daemon Off
+        Log_Level info
+        Parsers_File /fluent-bit/etc/parsers.conf
     [INPUT]
-        Name              tail
-        Path              /var/log/containers/*.log
-        Parser            kub-logs
-        Refresh_Interval  5
-        Mem_Buf_Limit     20MB
-        Skip_Long_Lines   On
-  output.conf: |
+        Name tail
+        Path /var/log/containers/*.log
+        Tag kube.*
+        Parser docker
     [OUTPUT]
-        name stdout
-        match *
-  parsers.conf: |
-    [PARSER]
-        Name        kub-logs
-        Format      json
+        Name stdout
+        Format json
+        Match *
