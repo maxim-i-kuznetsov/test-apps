@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: fluent-bit
     app.kubernetes.io/name: fluent-bit
-  name: fluent-bit
+  name: fluent-bit-cm
   namespace: argocd-test
 data:
   parsers.conf: |-
