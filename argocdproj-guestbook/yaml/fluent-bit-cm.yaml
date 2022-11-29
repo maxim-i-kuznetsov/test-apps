@@ -20,7 +20,9 @@ data:
     [INPUT]
         Name tail
         Path /var/log/containers/*.log
+        Tag kube.*
         Parser docker
     [OUTPUT]
         Name stdout
         Format json
+        Match *
