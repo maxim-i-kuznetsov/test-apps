@@ -9,18 +9,8 @@ metadata:
 data:
   filter.conf: |
     [FILTER]
-        Name    lua
-        Match   *
-        script  make_tags.lua
-        call    make_tags
-
-    [FILTER]
         Name    grep
         Match   kube.*
-        Exclude namespace monitoring
-        Exclude namespace metallb-system
-        Exclude namespace gitlab-managed-apps
-        Exclude namespace kube-*
 
     [FILTER]
         Name          record_modifier
@@ -54,23 +44,6 @@ data:
         Refresh_Interval  5
         Mem_Buf_Limit     20MB
         Skip_Long_Lines   On
-        Tag               kube.<namespace_name>.<container_name>.<pod_name>
-        Tag_Regex         (?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-
-  make_tags.lua: |
-    function make_tags(tag, timestamp, record)
-        new_record = record
-        local tag_list = {}
-        for s in string.gmatch(tag, "[^.]+") do
-            table.insert(tag_list, s)
-        end
-        new_record["namespace"] = tag_list[2]
-        new_record["container"] = tag_list[3]
-        new_record["pod"] = tag_list[4]
-        if (record["message"] == nil) then
-            new_record["message"] = record["log"]
-        end
-        return 1, timestamp, new_record
-    end
   output.conf: |
     [OUTPUT]
         name stdout
@@ -79,9 +52,3 @@ data:
     [PARSER]
         Name        kub-logs
         Format      json
-        Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L
-        # Command       |  Decoder     | Field   | Optional Action
-        # ==============|==============|=========|=================
-        Decode_Field_As  escaped_utf8   log       do_next
-        Decode_Field     json           log
