@@ -9,20 +9,19 @@ metadata:
 data:
   parsers.conf: |-
     [PARSER]
-        Name        docker
-        Format      json
+        name        docker
+        format      json
   fluent-bit.conf: |
     [SERVICE]
-        Flush 1
-        Daemon Off
-        Log_Level info
-        Parsers_File /fluent-bit/etc/parsers.conf
+        flush 1
+        daemon Off
+        log_Level info
+        parsers_file parsers.conf
     [INPUT]
-        Name tail
-        Path /var/log/containers/*.log
-        Tag kube.*
-        Parser docker
+        name tail
+        path /var/log/containers/*.log
+        tag kube.*
+        parser docker
     [OUTPUT]
-        Name stdout
-        Format json
+        name stdout
         Match *
