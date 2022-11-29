@@ -13,8 +13,28 @@ spec:
       labels:
         app: guestbook-ui
     spec:
+      volumes:
+        - name: varlog
+          hostPath:
+            path: /var/log/containers
+            type: ""
       containers:
-        - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
-          name: guestbook-ui
+        - name: guestbook-ui
+          image: gcr.io/heptio-images/ks-guestbook-demo:0.2
           ports:
             - containerPort: 80
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+        - name: fluent-bit
+          image: cr.fluentbit.io/fluent/fluent-bit:2.0
+          resources: {}
+          volumeMounts:
+            - name: varlog
+              readOnly: true
+              mountPath: /var/log/containers
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
