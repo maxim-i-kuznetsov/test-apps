@@ -7,21 +7,83 @@ metadata:
   name: fluent-bit-cm
   namespace: argocd-test
 data:
-  parsers.conf: |-
-    [PARSER]
-        name        docker
-        format      json
+  filter.conf: |
+    [FILTER]
+        Name    lua
+        Match   *
+        script  make_tags.lua
+        call    make_tags
+
+    [FILTER]
+        Name    grep
+        Match   kube.*
+        Exclude namespace monitoring
+        Exclude namespace metallb-system
+        Exclude namespace gitlab-managed-apps
+        Exclude namespace kube-*
+
+    [FILTER]
+        Name          record_modifier
+        Match         kube.*
+        Whitelist_key pod_time
+        Whitelist_key namespace
+        Whitelist_key container
+        Whitelist_key pod
+        Whitelist_key timeStamp
+        Whitelist_key stream
+        Whitelist_key thread
+        Whitelist_key level
+        Whitelist_key levelValue
+        Whitelist_key logger
+        Whitelist_key message
+        Record        cluster k8s-test
   fluent-bit.conf: |
     [SERVICE]
-        flush 1
-        daemon Off
-        log_Level info
-        parsers_file parsers.conf
+        Flush         1
+        Log_Level     info
+        Daemon        off
+        Parsers_File  parsers.conf
+    @INCLUDE filter.conf
+    @INCLUDE input.conf
+    @INCLUDE output.conf
+  input.conf: |
     [INPUT]
-        name tail
-        path /var/log/containers/*.log
-        tag kube.*
-        parser docker
+        Name              tail
+        Path              /var/log/containers/*.log
+        Parser            kub-logs
+        Refresh_Interval  5
+        Mem_Buf_Limit     20MB
+        Skip_Long_Lines   On
+        DB                /var/log/flb_kube_default.db
+        DB.Sync           Normal
+        Tag               kube.<namespace_name>.<container_name>.<pod_name>
+        Tag_Regex         (?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-
+  make_tags.lua: |
+    function make_tags(tag, timestamp, record)
+        new_record = record
+        local tag_list = {}
+        for s in string.gmatch(tag, "[^.]+") do
+            table.insert(tag_list, s)
+        end
+        new_record["namespace"] = tag_list[2]
+        new_record["container"] = tag_list[3]
+        new_record["pod"] = tag_list[4]
+        if (record["message"] == nil) then
+            new_record["message"] = record["log"]
+        end
+        return 1, timestamp, new_record
+    end
+  output.conf: |
     [OUTPUT]
         name stdout
-        Match *
+        match *
+  parsers.conf: |
+    [PARSER]
+        Name        kub-logs
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L
+        # Command       |  Decoder     | Field   | Optional Action
+        # ==============|==============|=========|=================
+        Decode_Field_As  escaped_utf8   log       do_next
+        Decode_Field     json           log
