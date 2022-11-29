@@ -54,8 +54,6 @@ data:
         Refresh_Interval  5
         Mem_Buf_Limit     20MB
         Skip_Long_Lines   On
-        DB                /var/log/flb_kube_default.db
-        DB.Sync           Normal
         Tag               kube.<namespace_name>.<container_name>.<pod_name>
         Tag_Regex         (?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-
   make_tags.lua: |
