@@ -11,8 +11,6 @@ data:
     [PARSER]
         Name        docker
         Format      json
-        Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L
   fluent-bit.conf: |
     [SERVICE]
         Flush 1
@@ -23,12 +21,6 @@ data:
         Name tail
         Path /var/log/containers/*.log
         Parser docker
-        Tag argocd-test
-        Mem_Buf_Limit 5MB
-        Skip_Long_Lines On
     [OUTPUT]
         Name stdout
-        Match argocd-test
         Format json
-        Json_date_key timestamp
-        Json_date_format iso8601
