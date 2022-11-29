@@ -37,7 +37,6 @@ spec:
           resources: {}
           volumeMounts:
             - name: varlog
-              readOnly: true
               mountPath: /var/log/containers
             - name: config
               mountPath: /fluent-bit/etc/fluent-bit.conf
