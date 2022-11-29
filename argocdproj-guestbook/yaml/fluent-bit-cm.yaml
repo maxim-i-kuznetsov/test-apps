@@ -11,22 +11,6 @@ data:
     [FILTER]
         Name    grep
         Match   kube.*
-
-    [FILTER]
-        Name          record_modifier
-        Match         kube.*
-        Whitelist_key pod_time
-        Whitelist_key namespace
-        Whitelist_key container
-        Whitelist_key pod
-        Whitelist_key timeStamp
-        Whitelist_key stream
-        Whitelist_key thread
-        Whitelist_key level
-        Whitelist_key levelValue
-        Whitelist_key logger
-        Whitelist_key message
-        Record        cluster k8s-test
   fluent-bit.conf: |
     [SERVICE]
         Flush         1
