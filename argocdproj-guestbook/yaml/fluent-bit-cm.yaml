@@ -13,7 +13,7 @@ data:
         Format      json
   fluent-bit.conf: |
     [SERVICE]
-        Flush 1
+        Flush 5
         Daemon Off
         Log_Level info
         Parsers_File /fluent-bit/etc/parsers.conf
@@ -23,6 +23,6 @@ data:
         Tag kube.*
         Parser docker
     [OUTPUT]
-        Name stdout
-        Format json
+        Name file
         Match *
+        Path /var/log/k8s.log
