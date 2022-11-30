@@ -15,7 +15,9 @@ spec:
     spec:
       volumes:
         - name: varlog
-          emptyDir: {}
+          hostPath:
+            path: /var/log/containers
+            type: Directory
         - name: config
           configMap:
             defaultMode: 420
