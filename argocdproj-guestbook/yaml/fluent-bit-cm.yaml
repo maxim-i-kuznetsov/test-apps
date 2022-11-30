@@ -34,8 +34,38 @@ data:
         call    convert_date_efs
     [INPUT]
         Name tail
-        Path /var/log/containers/*argocd-test_guestbook-ui*.log
-        Tag kube.*
+        Path /var/log/containers/*argocd-server*.log
+        Tag argocd-server
+        Parser docker
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*argocd-repo-server*.log
+        Tag argocd-repo-server
+        Parser docker
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*argocd-application-controller*.log
+        Tag argocd-application-controller
+        Parser docker
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*argocd-applicationset-controller*.log
+        Tag argocd-applicationset-controller
+        Parser docker
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*argocd-dex-server*.log
+        Tag argocd-dex-server
+        Parser docker
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*argocd-notifications-controller*.log
+        Tag argocd-notifications-controller
+        Parser docker
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*argocd-redis*.log
+        Tag argocd-redis
         Parser docker
     [OUTPUT]
         Name stdout
