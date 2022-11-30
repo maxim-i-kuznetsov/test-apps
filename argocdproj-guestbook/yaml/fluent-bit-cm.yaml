@@ -25,7 +25,7 @@ data:
     [OUTPUT]
         Name file
         Match *
-        Path /var/log/fluent-bit/fluent-bit.log
+        Path /var/log/
     [OUTPUT]
         Name stdout
         Match *
