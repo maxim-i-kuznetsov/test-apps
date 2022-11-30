@@ -18,6 +18,10 @@ spec:
           hostPath:
             path: /var/log/containers
             type: Directory
+        - name: pods-log
+          hostPath:
+            path: /var/log/pods
+            type: Directory
         - name: fluentbit-out-log
           emptyDir: {}
         - name: config
@@ -35,6 +39,9 @@ spec:
             - name: containers-log
               mountPath: /var/log/containers
               readOnly: true
+            - name: pods-log
+              mountPath: /var/log/pods
+              readOnly: true
             - name: fluentbit-out-log
               mountPath: /var/log/fluent-bit
           terminationMessagePath: /dev/termination-log
@@ -46,6 +53,9 @@ spec:
           volumeMounts:
             - name: containers-log
               mountPath: /var/log/containers
+              readOnly: true
+            - name: pods-log
+              mountPath: /var/log/pods
               readOnly: true
             - name: fluentbit-out-log
               mountPath: /var/log/fluent-bit
