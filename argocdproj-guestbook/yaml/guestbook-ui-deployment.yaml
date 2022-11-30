@@ -67,7 +67,7 @@ spec:
               mountPath: /fluent-bit/etc/fluent-bit.conf
               subPath: fluent-bit.conf
             - name: config
-              mountPath: /fluent-bit/etc/fluent-bit.conf
+              mountPath: /fluent-bit/etc/convert_date.lua
               subPath: convert_date.lua
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
