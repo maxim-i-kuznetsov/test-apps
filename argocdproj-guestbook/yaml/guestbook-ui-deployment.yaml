@@ -29,6 +29,10 @@ spec:
             - containerPort: 80
               protocol: TCP
           resources: {}
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log/containers
+              readOnly: true
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
@@ -38,6 +42,7 @@ spec:
           volumeMounts:
             - name: varlog
               mountPath: /var/log/containers
+              readOnly: true
             - name: config
               mountPath: /fluent-bit/etc/fluent-bit.conf
               subPath: fluent-bit.conf
