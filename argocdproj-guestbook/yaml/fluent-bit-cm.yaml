@@ -26,3 +26,6 @@ data:
         Name file
         Match *
         Path /var/log/fluent-bit/fluent-bit.log
+    [OUTPUT]
+        Name stdout
+        Match *
