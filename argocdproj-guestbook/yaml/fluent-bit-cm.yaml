@@ -19,7 +19,7 @@ data:
         Parsers_File /fluent-bit/etc/parsers.conf
     [INPUT]
         Name tail
-        Path /var/log/containers/*.log
+        Path /var/log/containers/*argocd-test_guestbook-ui*.log
         Tag kube.*
         Parser docker
     [OUTPUT]
