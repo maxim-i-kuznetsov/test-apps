@@ -22,6 +22,10 @@ spec:
           hostPath:
             path: /var/log/pods
             type: Directory
+        - name: docker-containers-log
+          hostPath:
+            path: /var/lib/docker/containers
+            type: Directory
         - name: fluentbit-out-log
           emptyDir: {}
         - name: config
@@ -36,6 +40,9 @@ spec:
               protocol: TCP
           resources: {}
           volumeMounts:
+            - name: docker-containers-log
+              mountPath: /var/lib/docker/containers
+              readOnly: true
             - name: containers-log
               mountPath: /var/log/containers
               readOnly: true
@@ -51,6 +58,9 @@ spec:
           image: cr.fluentbit.io/fluent/fluent-bit:2.0
           resources: {}
           volumeMounts:
+            - name: docker-containers-log
+              mountPath: /var/lib/docker/containers
+              readOnly: true
             - name: containers-log
               mountPath: /var/log/containers
               readOnly: true
