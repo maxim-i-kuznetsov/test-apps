@@ -21,6 +21,9 @@ data:
     [PARSER]
         Name        docker
         Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%d %H:%M:%S.%L
+        Time_Keep   On
   fluent-bit.conf: |
     [SERVICE]
         Flush 5
