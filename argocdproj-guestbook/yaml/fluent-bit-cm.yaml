@@ -25,4 +25,4 @@ data:
     [OUTPUT]
         Name file
         Match *
-        Path /var/log/k8s.log
+        Path /var/log/fluent-bit/fluent-bit.log
