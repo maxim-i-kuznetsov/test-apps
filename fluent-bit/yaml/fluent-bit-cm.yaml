@@ -13,7 +13,9 @@ data:
       dt_str = record["serverEventDatetime"]
       local year, month, day, hour, minute, seconds, milliseconds = dt_str:match(pattern)
       ts = os.time{year = year, month = month, day = day, hour = hour, min = minute, sec = seconds }
-      ts = (ts * 10000000) + milliseconds
+      milliseconds = milliseconds/10000
+      milliseconds = milliseconds - milliseconds%1
+      ts = (ts * 1000) + milliseconds
       record["serverEventDatetime"] = ts
       return 2, timestamp, record
     end
@@ -21,6 +23,11 @@ data:
     [PARSER]
         Name        docker
         Format      json
+    [PARSER]
+        Name   log_parser
+        Format regex
+        Regex  ^time=(?<time>[^ ]*) level=(?<level>[^ ]*) msg=(?<message>[^ ]*) resource=(?<resource>[^ ]*)?$
+        Types  status:integer
   fluent-bit.conf: |
     [SERVICE]
         Flush 5
@@ -72,6 +79,11 @@ data:
         Match   *
         script  /fluent-bit/etc/convert_date.lua
         call    convert_date_efs
+    [FILTER]
+        Name    parser
+        Match   argocd-notifications-controller
+        Key_Name log
+        Parser log_parser
     [OUTPUT]
         Name stdout
         Match *
