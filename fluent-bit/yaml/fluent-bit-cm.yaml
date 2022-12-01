@@ -26,7 +26,7 @@ data:
     [PARSER]
         Name   log_parser
         Format regex
-        Regex  (?<remote_address>[^ ]*) "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<status>[^ ]*) "(?<http_user_agent>[^\"]*)"
+        Regex  time=(?<timestamp>[^ ]*) level=(?<level>[^ ]*) \w+
         Types  status:integer
   fluent-bit.conf: |
     [SERVICE]
@@ -72,7 +72,6 @@ data:
     [FILTER]
         Name modify
         Match   *
-        Add tmp "172.29.0.1 "GET / HTTP/1.1" 200 "curl/7.64.1""
         Add serverEventDatetime ""
         Hard_copy time serverEventDatetime
     [FILTER]
@@ -83,7 +82,7 @@ data:
     [FILTER]
         Name    parser
         Match   *
-        Key_Name tmp
+        Key_Name log
         Parser log_parser
     [OUTPUT]
         Name stdout
