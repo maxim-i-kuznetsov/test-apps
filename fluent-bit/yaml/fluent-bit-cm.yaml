@@ -68,7 +68,7 @@ data:
     [FILTER]
         Name record_modifier
         Match   *
-        Record serverEventDatetime $time
+        Record serverEventDatetime ${time}
     [FILTER]
         Name    lua
         Match   *
