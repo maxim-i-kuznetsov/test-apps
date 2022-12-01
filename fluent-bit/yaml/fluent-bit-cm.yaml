@@ -9,16 +9,13 @@ metadata:
 data:
   convert_date.lua: |-
     function convert_date_efs(tag, timestamp, record)
-      --[[
-      local pattern = "(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+),(%d+)"
-      dt_str = record["serverEventDatetime"]
+      local pattern = "(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+),(%d+)"
+      dt_str = record["time"]
       local year, month, day, hour, minute, seconds, milliseconds = dt_str:match(pattern)
       ts = os.time{year = year, month = month, day = day, hour = hour, min = minute, sec = seconds }
       ts = (ts * 1000) + milliseconds
       record["serverEventDatetime"] = ts
       return 2, timestamp, record
-      --]]
-      return true
     end
   parsers.conf: |-
     [PARSER]
