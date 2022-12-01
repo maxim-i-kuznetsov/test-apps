@@ -81,7 +81,7 @@ data:
         call    convert_date_efs
     [FILTER]
         Name    parser
-        Match   argocd-notifications-controller
+        Match   *
         Key_Name log
         Parser log_parser
     [OUTPUT]
