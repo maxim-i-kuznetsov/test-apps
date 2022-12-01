@@ -26,7 +26,7 @@ data:
     [PARSER]
         Name   log_parser
         Format regex
-        Regex  time=(?<time>[^ ]*) level=(?<level>[^ ]*) \w+
+        Regex  time=(?<timestamp>[^ ]*) level=(?<level>[^ ]*) \w+
         Types  status:integer
   fluent-bit.conf: |
     [SERVICE]
