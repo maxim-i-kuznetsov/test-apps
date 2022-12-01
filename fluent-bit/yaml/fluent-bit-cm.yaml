@@ -72,6 +72,11 @@ data:
         Match   *
         script  /fluent-bit/etc/convert_date.lua
         call    convert_date_efs
+    [FILTER]
+        Name nest
+        Match *
+        Operation lift
+        Nested_under log
     [OUTPUT]
         Name stdout
         Match *
