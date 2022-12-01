@@ -10,7 +10,7 @@ data:
   convert_date.lua: |-
     function convert_date_efs(tag, timestamp, record)
       local pattern = "(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+),(%d+)"
-      dt_str = record["time"]
+      dt_str = record["serverEventDatetime"]
       local year, month, day, hour, minute, seconds, milliseconds = dt_str:match(pattern)
       ts = os.time{year = year, month = month, day = day, hour = hour, min = minute, sec = seconds }
       ts = (ts * 1000) + milliseconds
@@ -65,7 +65,7 @@ data:
     [FILTER]
         Name record_modifier
         Match   *
-        Record serverEventDatetime
+        Record serverEventDatetime 0
     [FILTER]
         Name    lua
         Match   *
