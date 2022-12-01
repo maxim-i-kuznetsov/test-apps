@@ -63,9 +63,10 @@ data:
         Tag argocd-redis
         Parser docker
     [FILTER]
-        Name record_modifier
+        Name modify
         Match   *
-        Record serverEventDatetime "2022-12-01T11:42:54,512"
+        Add serverEventDatetime "2022-12-01T11:42:54,512"
+        Copy serverEventDatetime time
     [FILTER]
         Name    lua
         Match   *
