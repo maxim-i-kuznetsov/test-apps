@@ -50,6 +50,9 @@ spec:
             - name: config
               mountPath: /fluent-bit/etc/convert_date.lua
               subPath: convert_date.lua
+            - name: config
+              mountPath: /fluent-bit/etc/parsers.conf
+              subPath: parsers.conf
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
