@@ -66,6 +66,10 @@ data:
         Tag argocd-redis
         Parser docker
     [FILTER]
+        Name record_modifier
+        Match   *
+        Record serverEventDatetime $time
+    [FILTER]
         Name    lua
         Match   *
         script  /fluent-bit/etc/convert_date.lua
