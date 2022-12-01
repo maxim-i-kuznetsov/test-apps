@@ -9,6 +9,7 @@ metadata:
 data:
   convert_date.lua: |-
     function convert_date_efs(tag, timestamp, record)
+      --[[
       local pattern = "(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+),(%d+)"
       dt_str = record["serverEventDatetime"]
       local year, month, day, hour, minute, seconds, milliseconds = dt_str:match(pattern)
@@ -16,6 +17,8 @@ data:
       ts = (ts * 1000) + milliseconds
       record["serverEventDatetime"] = ts
       return 2, timestamp, record
+      --]]
+      return true
     end
   parsers.conf: |-
     [PARSER]
@@ -27,11 +30,6 @@ data:
         Daemon Off
         Log_Level info
         Parsers_File /fluent-bit/etc/parsers.conf
-    [FILTER]
-        Name    lua
-        Match   *
-        script  /fluent-bit/etc/convert_date.lua
-        call    convert_date_efs
     [INPUT]
         Name tail
         Path /var/log/containers/*argocd-server*.log
@@ -67,6 +65,11 @@ data:
         Path /var/log/containers/*argocd-redis*.log
         Tag argocd-redis
         Parser docker
+    [FILTER]
+        Name    lua
+        Match   *
+        script  /fluent-bit/etc/convert_date.lua
+        call    convert_date_efs
     [OUTPUT]
         Name stdout
         Match *

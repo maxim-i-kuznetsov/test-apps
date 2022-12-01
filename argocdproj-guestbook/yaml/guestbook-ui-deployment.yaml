@@ -13,23 +13,6 @@ spec:
       labels:
         app: guestbook-ui
     spec:
-      volumes:
-        - name: containers-log
-          hostPath:
-            path: /var/log/containers
-            type: Directory
-        - name: pods-log
-          hostPath:
-            path: /var/log/pods
-            type: Directory
-        - name: docker-containers-log
-          hostPath:
-            path: /var/lib/docker/containers
-            type: Directory
-        - name: config
-          configMap:
-            defaultMode: 420
-            name: fluent-bit-cm
       containers:
         - name: guestbook-ui
           image: gcr.io/heptio-images/ks-guestbook-demo:0.2
@@ -37,38 +20,6 @@ spec:
             - containerPort: 80
               protocol: TCP
           resources: {}
-          volumeMounts:
-            - name: docker-containers-log
-              mountPath: /var/lib/docker/containers
-              readOnly: true
-            - name: containers-log
-              mountPath: /var/log/containers
-              readOnly: true
-            - name: pods-log
-              mountPath: /var/log/pods
-              readOnly: true
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          imagePullPolicy: Always
-        - name: fluent-bit
-          image: cr.fluentbit.io/fluent/fluent-bit:2.0
-          resources: {}
-          volumeMounts:
-            - name: docker-containers-log
-              mountPath: /var/lib/docker/containers
-              readOnly: true
-            - name: containers-log
-              mountPath: /var/log/containers
-              readOnly: true
-            - name: pods-log
-              mountPath: /var/log/pods
-              readOnly: true
-            - name: config
-              mountPath: /fluent-bit/etc/fluent-bit.conf
-              subPath: fluent-bit.conf
-            - name: config
-              mountPath: /fluent-bit/etc/convert_date.lua
-              subPath: convert_date.lua
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
