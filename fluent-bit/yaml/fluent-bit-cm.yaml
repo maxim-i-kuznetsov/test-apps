@@ -9,7 +9,7 @@ metadata:
 data:
   convert_date.lua: |-
     function convert_date_efs(tag, timestamp, record)
-      local pattern = "(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+).(%d+)"
+      local pattern = "(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+).(%d+)Z"
       dt_str = record["serverEventDatetime"]
       local year, month, day, hour, minute, seconds, milliseconds = dt_str:match(pattern)
       ts = os.time{year = year, month = month, day = day, hour = hour, min = minute, sec = seconds }
@@ -72,11 +72,6 @@ data:
         Match   *
         script  /fluent-bit/etc/convert_date.lua
         call    convert_date_efs
-    [FILTER]
-        Name nest
-        Match *
-        Operation lift
-        Nested_under log
     [OUTPUT]
         Name stdout
         Match *
