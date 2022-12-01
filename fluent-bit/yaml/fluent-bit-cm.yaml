@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/instance: fluent-bit
     app.kubernetes.io/name: fluent-bit
   name: fluent-bit-cm
-  namespace: argocd-test
+  namespace: argocd-tools
 data:
   convert_date.lua: |-
     function convert_date_efs(tag, timestamp, record)
