@@ -26,7 +26,7 @@ data:
     [PARSER]
         Name   log_parser
         Format regex
-        Regex  time=(?<timestamp>[^ ]*) level=(?<level>[^ ]*) \w+
+        Regex  (?<remote_address>[^ ]*) "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<status>[^ ]*) "(?<http_user_agent>[^\"]*)"
         Types  status:integer
   fluent-bit.conf: |
     [SERVICE]
@@ -72,7 +72,8 @@ data:
     [FILTER]
         Name modify
         Match   *
-        Add serverEventDatetime "2022-12-01T11:42:54,512"
+        Add tmp "172.29.0.1 "GET / HTTP/1.1" 200 "curl/7.64.1""
+        Add serverEventDatetime ""
         Hard_copy time serverEventDatetime
     [FILTER]
         Name    lua
@@ -82,7 +83,7 @@ data:
     [FILTER]
         Name    parser
         Match   *
-        Key_Name log
+        Key_Name tmp
         Parser log_parser
     [OUTPUT]
         Name stdout
