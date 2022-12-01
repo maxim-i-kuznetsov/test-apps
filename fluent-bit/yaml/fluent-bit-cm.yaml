@@ -84,6 +84,7 @@ data:
         Match   *
         Key_Name log
         Parser log_parser
+        Reserve_Data On
     [OUTPUT]
         Name stdout
         Match *
