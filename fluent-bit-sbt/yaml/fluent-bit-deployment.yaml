@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluent-bit
+spec:
+  replicas: 1
+  revisionHistoryLimit: 4
+  selector:
+    matchLabels:
+      app: fluent-bit
+  template:
+    metadata:
+      labels:
+        app: fluent-bit
+    spec:
+      volumes:
+        - name: containers-log
+          hostPath:
+            path: /var/log/containers
+            type: Directory
+        - name: pods-log
+          hostPath:
+            path: /var/log/pods
+            type: Directory
+        - name: docker-containers-log
+          hostPath:
+            path: /var/lib/docker/containers
+            type: Directory
+        - name: config
+          configMap:
+            defaultMode: 420
+            name: fluent-bit-cm
+      containers:
+        - name: fluent-bit
+          image: >-
+            base.sw.sbc.space/efs/ci01976100/ci02698091_ulogger/alt-fluent-bit@sha256:86cc97bb18d99f47d819eeb5f85e9b34faa0dc006ab83f9fe7e103e1ffe5fc85
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - name: docker-containers-log
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: containers-log
+              mountPath: /var/log/containers
+              readOnly: true
+            - name: pods-log
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: config
+              mountPath: /fluent-bit/etc/fluent-bit.conf
+              subPath: fluent-bit.conf
+            - name: config
+              mountPath: /fluent-bit/etc/convert_date.lua
+              subPath: convert_date.lua
+            - name: config
+              mountPath: /fluent-bit/etc/parsers.conf
+              subPath: parsers.conf
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
