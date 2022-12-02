@@ -36,7 +36,7 @@ data:
         [PARSER]
             Name   log_parser
             Format regex
-            Regex  time=(?<timestamp>[^ ]*) level=(?<logLevel>[^ ]*) msg=(?<message>(\"[^"]*\")|([\w\W]*time_ms=\d+.\d+)) ?(?<details>[^$]*)
+            Regex  time=\"(?<timestamp>[^ ]*)\" level=(?<logLevel>[^ ]*) msg=(?<message>(\"[^"]*\")|([\w\W]*time_ms=\d+.\d+)) ?(?<details>[^$]*)
             Types  status:integer
     fluent-bit.conf: |
         [SERVICE]
