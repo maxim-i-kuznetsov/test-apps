@@ -99,6 +99,10 @@ data:
             Match   *
             script  /fluent-bit/etc/convert_date.lua
             call    convert_serverEventDatetime
+        [FILTER]
+            Name    lua
+            Match   *
+            script  /fluent-bit/etc/convert_date.lua
             call    convert_timestamp
         [OUTPUT]
             Name stdout
