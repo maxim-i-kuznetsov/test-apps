@@ -33,7 +33,13 @@ spec:
       containers:
         - name: fluent-bit
           image: cr.fluentbit.io/fluent/fluent-bit:2.0
-          resources: {}
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
           volumeMounts:
             - name: docker-containers-log
               mountPath: /var/lib/docker/containers

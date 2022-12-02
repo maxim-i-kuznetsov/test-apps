@@ -8,7 +8,7 @@ metadata:
     namespace: argocd-tools
 data:
     convert_date.lua: |-
-        function convert_date_efs(tag, timestamp, record)
+        function convert_serverEventDatetime(tag, timestamp, record)
           local pattern = "(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+).(%d+)Z"
           dt_str = record["serverEventDatetime"]
           local year, month, day, hour, minute, seconds, milliseconds = dt_str:match(pattern)
@@ -19,6 +19,16 @@ data:
           record["serverEventDatetime"] = ts
           return 2, timestamp, record
         end
+        function convert_timestamp(tag, timestamp, record)
+          local pattern = "(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+).(%d+)Z"
+          dt_str = record["@timestamp"]
+          local year, month, day, hour, minute, seconds, milliseconds = dt_str:match(pattern)
+          ts = os.time{year = year, month = month, day = day, hour = hour, min = minute, sec = seconds }
+          milliseconds = milliseconds/1000
+          ts = ts + milliseconds
+          record["@timestamp"] = ts
+          return 2, timestamp, record
+        end
     parsers.conf: |-
         [PARSER]
             Name        docker
@@ -26,7 +36,7 @@ data:
         [PARSER]
             Name   log_parser
             Format regex
-            Regex  time=(?<timestamp>[^ ]*) level=(?<level>[^ ]*) msg=(?<message>(\"[^"]*\")|([\w\W]*time_ms=\d+.\d+)) ?(?<details>[^$]*)
+            Regex  time=(?<@timestamp>[^ ]*) level=(?<logLevel>[^ ]*) msg=(?<message>(\"[^"]*\")|([\w\W]*time_ms=\d+.\d+)) ?(?<details>[^$]*)
             Types  status:integer
     fluent-bit.conf: |
         [SERVICE]
@@ -70,21 +80,26 @@ data:
             Tag argocd-redis
             Parser docker
         [FILTER]
+            Name    parser
+            Match   *
+            Key_Name log
+            Parser log_parser
+            Reserve_Data On
+        [FILTER]
             Name modify
             Match   *
+            Add subsystem FIS
+            Add distribVersion 2.4.12
+            Add deploymentUnit ArgoCD
+            Add hostName ArgoCD
             Add serverEventDatetime ""
             Hard_copy time serverEventDatetime
         [FILTER]
             Name    lua
             Match   *
             script  /fluent-bit/etc/convert_date.lua
-            call    convert_date_efs
-        [FILTER]
-            Name    parser
-            Match   *
-            Key_Name log
-            Parser log_parser
-            Reserve_Data On
+            call    convert_serverEventDatetime
+            call    convert_timestamp
         [OUTPUT]
             Name stdout
             Match *
