@@ -21,10 +21,10 @@ data:
         end
         function convert_timestamp(tag, timestamp, record)
           local pattern = "(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)Z"
-          dt_str = record["timestamp"]
+          dt_str = record["@timestamp"]
           local year, month, day, hour, minute, seconds = dt_str:match(pattern)
           ts = os.time{year = year, month = month, day = day, hour = hour, min = minute, sec = seconds }
-          record["timestamp"] = ts
+          record["@timestamp"] = ts
           return 2, timestamp, record
         end
     parsers.conf: |-
@@ -92,6 +92,7 @@ data:
             Add hostName ArgoCD
             Add serverEventDatetime ""
             Hard_copy time serverEventDatetime
+            Rename timestamp @timestamp
         [FILTER]
             Name    lua
             Match   *
