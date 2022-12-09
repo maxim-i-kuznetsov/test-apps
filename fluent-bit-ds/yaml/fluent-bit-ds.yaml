@@ -3,9 +3,6 @@ kind: DaemonSet
 metadata:
   name: fluent-bit-ds
 spec:
-  replicas: 1
-  revisionHistoryLimit: 4
-  namespace: logging
   labels:
     k8s-app: fluent-bit
   selector:
