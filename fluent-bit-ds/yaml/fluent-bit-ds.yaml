@@ -16,18 +16,18 @@ spec:
       # nodeName: minikube      ### развернуть под на конкретный узел по имени узла
       # nodeSelector:           ### развернуть под на конкретный узел по метке
       #   kubernetes.io/hostname: minikube-m02
-      # namespaceSelector:
-      #  kubernetes.io/metadata.name: argocd
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values:
-                      - argocd-server
-              topologyKey: topology.kubernetes.io/node
+      namespaceSelector:
+        kubernetes.io/metadata.name: argocd
+      # affinity:
+      #   podAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchExpressions:
+      #             - key: app.kubernetes.io/name
+      #               operator: In
+      #               values:
+      #                 - argocd-server
+      #         topologyKey: topology.kubernetes.io/zone
       volumes:
         - name: containers-log
           hostPath:
