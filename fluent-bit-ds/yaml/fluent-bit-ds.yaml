@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluent-bit-ds
-spec:
   labels:
     k8s-app: fluent-bit
+spec:
   selector:
     matchLabels:
       app: fluent-bit
