@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluent-bit-ds
+spec:
+  replicas: 1
+  revisionHistoryLimit: 4
+  namespace: logging
+  labels:
+    k8s-app: fluent-bit
+  selector:
+    matchLabels:
+      app: fluent-bit
+  template:
+    metadata:
+      labels:
+        app: fluent-bit
+    spec:
+      volumes:
+        - name: containers-log
+          hostPath:
+            path: /var/log/containers
+            type: Directory
+        - name: pods-log
+          hostPath:
+            path: /var/log/pods
+            type: Directory
+        - name: docker-containers-log
+          hostPath:
+            path: /var/lib/docker/containers
+            type: Directory
+        - name: config
+          configMap:
+            defaultMode: 420
+            name: fluent-bit-cm
+      containers:
+        - name: fluent-bit
+          image: cr.fluentbit.io/fluent/fluent-bit:2.0
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - name: docker-containers-log
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: containers-log
+              mountPath: /var/log/containers
+              readOnly: true
+            - name: pods-log
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: config
+              mountPath: /fluent-bit/etc/fluent-bit.conf
+              subPath: fluent-bit.conf
+            - name: config
+              mountPath: /fluent-bit/etc/convert_date.lua
+              subPath: convert_date.lua
+            - name: config
+              mountPath: /fluent-bit/etc/parsers.conf
+              subPath: parsers.conf
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
