@@ -16,21 +16,28 @@ spec:
       # nodeName: minikube      ### развернуть под на конкретный узел по имени узла
       # nodeSelector:           ### развернуть под на конкретный узел по метке
       #   kubernetes.io/hostname: minikube-m02
+      # affinity:
+      #   podAntiAffinity:
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #       - weight: 100
+      #         podAffinityTerm:
+      #           labelSelector:
+      #             matchLabels:
+      #               app.kubernetes.io/name: argocd-server
+      #           topologyKey: kubernetes.io/hostname
+      #       - weight: 5
+      #         podAffinityTerm:
+      #           labelSelector:
+      #             matchLabels:
+      #               app.kubernetes.io/part-of: argocd
+      #           topologyKey: kubernetes.io/hostname
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: argocd-server
-                topologyKey: kubernetes.io/hostname
-            - weight: 5
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/part-of: argocd
-                topologyKey: kubernetes.io/hostname
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/part-of: argocd
+              topologyKey: "kubernetes.io/hostname"
       volumes:
         - name: containers-log
           hostPath:
