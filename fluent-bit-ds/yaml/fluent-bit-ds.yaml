@@ -33,7 +33,6 @@ spec:
       containers:
         - name: fluent-bit
           image: cr.fluentbit.io/fluent/fluent-bit:2.0
-          nodeName: minikube
           resources:
             limits:
               cpu: 100m
