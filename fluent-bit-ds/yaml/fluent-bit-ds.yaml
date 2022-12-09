@@ -14,8 +14,10 @@ spec:
         app: fluent-bit
     spec:
       # nodeName: minikube      ### развернуть под на конкретный узел по имени узла
-      nodeSelector:
-        kubernetes.io/hostname: minikube-m02
+      # nodeSelector:           ### развернуть под на конкретный узел по метке
+      #   kubernetes.io/hostname: minikube-m02
+      namespaceSelector:
+        kubernetes.io/metadata.name: argocd
       volumes:
         - name: containers-log
           hostPath:
