@@ -13,6 +13,7 @@ spec:
       labels:
         app: fluent-bit
     spec:
+      nodeName: minikube
       volumes:
         - name: containers-log
           hostPath:
