@@ -13,7 +13,7 @@ spec:
       labels:
         app: fluent-bit
     spec:
-      # nodeName: minikube      ### развернуть под на конкретный узел по имени узла
+      nodeName: minikube ### развернуть под на конкретный узел по имени узла
       # nodeSelector:           ### развернуть под на конкретный узел по метке
       #   kubernetes.io/hostname: minikube-m02
       # affinity:
@@ -31,13 +31,6 @@ spec:
       #             matchLabels:
       #               app.kubernetes.io/part-of: argocd
       #           topologyKey: kubernetes.io/hostname
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchLabels:
-                  app.kubernetes.io/part-of: argocd
-              topologyKey: "kubernetes.io/hostname"
       volumes:
         - name: containers-log
           hostPath:
