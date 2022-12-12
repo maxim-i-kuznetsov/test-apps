@@ -26,10 +26,10 @@ spec:
           hostPath:
             path: /var/log/pods
             type: Directory
-        - name: docker-containers-log
-          hostPath:
-            path: /var/lib/docker/containers
-            type: Directory
+        # - name: docker-containers-log
+        #   hostPath:
+        #     path: /var/lib/docker/containers
+        #     type: Directory
         - name: config
           configMap:
             defaultMode: 420
@@ -49,9 +49,9 @@ spec:
             - name: journal-path
               readOnly: true
               mountPath: /mnt/host
-            - name: docker-containers-log
-              mountPath: /var/lib/docker/containers
-              readOnly: true
+            # - name: docker-containers-log
+            #   mountPath: /var/lib/docker/containers
+            #   readOnly: true
             - name: containers-log
               mountPath: /var/log/containers
               readOnly: true
