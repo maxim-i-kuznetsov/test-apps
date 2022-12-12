@@ -16,8 +16,8 @@ spec:
       volumes:
         - name: journal-path
           hostPath:
-            path: /
-            type: ""
+            path: /var/log/journal
+            type: Directory
         - name: containers-log
           hostPath:
             path: /var/log/containers
@@ -49,7 +49,8 @@ spec:
           volumeMounts:
             - name: journal-path
               readOnly: true
-              mountPath: /mnt/host
+              mountPath: /var/log/journal
+              # mountPath: /mnt/host
             # - name: docker-containers-log
             #   mountPath: /var/lib/docker/containers
             #   readOnly: true

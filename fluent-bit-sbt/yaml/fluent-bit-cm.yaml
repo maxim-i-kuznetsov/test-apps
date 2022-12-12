@@ -77,6 +77,11 @@ data:
             Path /var/log/containers/*argocd-redis*.log
             Tag argocd-redis
             Parser docker
+        [INPUT]
+            Name tail
+            Path /var/log/containers/logger-test*fluent-bit*.log
+            Tag fluent-bit
+            Parser docker
         [FILTER]
             Name    parser
             Match   *
