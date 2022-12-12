@@ -36,9 +36,9 @@ spec:
             name: fluent-bit-cm
       containers:
         - name: fluent-bit
-          image: base.sw.sbc.space/gtplatform/alt/fluentbit/fluentbit:2.0.5
-          # image: >-
-          #   base.sw.sbc.space/efs/ci01976100/ci02698091_ulogger/alt-fluent-bit@sha256:86cc97bb18d99f47d819eeb5f85e9b34faa0dc006ab83f9fe7e103e1ffe5fc85
+          # image: base.sw.sbc.space/gtplatform/alt/fluentbit/fluentbit:2.0.5
+          image: >-
+            base.sw.sbc.space/efs/ci01976100/ci02698091_ulogger/alt-fluent-bit@sha256:86cc97bb18d99f47d819eeb5f85e9b34faa0dc006ab83f9fe7e103e1ffe5fc85
           resources:
             limits:
               cpu: 100m
