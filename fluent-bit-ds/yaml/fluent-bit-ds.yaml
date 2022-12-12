@@ -22,7 +22,7 @@ spec:
             nodeSelectorTerms:
               - matchExpressions:
                   - key: metadata.name
-                    operator: Exists
+                    operator: In
                     values:
                       - minikube-m02
       # affinity:
