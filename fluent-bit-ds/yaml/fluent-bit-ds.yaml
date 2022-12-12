@@ -13,9 +13,18 @@ spec:
       labels:
         app: fluent-bit
     spec:
-      nodeName: minikube ### развернуть под на конкретный узел по имени узла
+      # nodeName: minikube      ### развернуть под на конкретный узел по имени узла
       # nodeSelector:           ### развернуть под на конкретный узел по метке
       #   kubernetes.io/hostname: minikube-m02
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: metadata.name
+                    operator: In
+                    values:
+                      - minikube-m02
       # affinity:
       #   podAntiAffinity:
       #     preferredDuringSchedulingIgnoredDuringExecution:
