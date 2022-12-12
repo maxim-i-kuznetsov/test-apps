@@ -14,6 +14,10 @@ spec:
         app: fluent-bit
     spec:
       volumes:
+        - name: journal-path
+          hostPath:
+            path: /
+            type: ""
         - name: containers-log
           hostPath:
             path: /var/log/containers
@@ -42,6 +46,9 @@ spec:
               cpu: 100m
               memory: 256Mi
           volumeMounts:
+            - name: journal-path
+              readOnly: true
+              mountPath: /mnt/host
             - name: docker-containers-log
               mountPath: /var/lib/docker/containers
               readOnly: true
