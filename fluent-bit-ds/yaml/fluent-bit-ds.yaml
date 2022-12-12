@@ -13,18 +13,28 @@ spec:
       labels:
         app: fluent-bit
     spec:
-      # nodeName: minikube      ### развернуть под на конкретный узел по имени узла
-      # nodeSelector:           ### развернуть под на конкретный узел по метке
+      # nodeName: minikube                          ### развернуть под на конкретный узел по имени узла
+      # nodeSelector:                               ### развернуть под на конкретный узел по метке
       #   kubernetes.io/hostname: minikube-m02
+      # affinity:                                   ### развернуть под на конкретный узел по метке
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: kubernetes.io/hostname
+      #               operator: In
+      #               values:
+      #                 - minikube-m02
       affinity:
-        nodeAffinity:
+        podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: kubernetes.io/hostname
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
                     operator: In
                     values:
-                      - minikube-m02
+                      - argocd-application-controller
+              topologyKey: kubernetes.io/hostname
       # affinity:
       #   podAntiAffinity:
       #     preferredDuringSchedulingIgnoredDuringExecution:
