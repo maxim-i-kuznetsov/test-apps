@@ -26,24 +26,16 @@ spec:
       #               values:
       #                 - minikube-m02
       # ---------- не рабочие варианты ----------
-      # affinity:
-      #   podAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       - labelSelector:
-      #           matchExpressions:
-      #             - key: app.kubernetes.io/name
-      #               operator: In
-      #               values:
-      #                 - argocd-application-controller
-      #         topologyKey: kubernetes.io/hostname
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    kubernetes.io/metadata.name: argocd
-              topologyKey: kubernetes.io/hostname
+            - labelSelector:
+                matchExpressions:
+                  - key: kubernetes.io/metadata.name
+                    operator: In
+                    values:
+                      - argocd
+              topologyKey: topology.kubernetes.io/zone
       volumes:
         - name: containers-log
           hostPath:
