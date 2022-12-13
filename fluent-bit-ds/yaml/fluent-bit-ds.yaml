@@ -13,12 +13,10 @@ spec:
       labels:
         app: fluent-bit
     spec:
-      # nodeName: minikube                          ### развернуть под на конкретный узел по имени узла
-      # nodeSelector:                               ### развернуть под на конкретный узел по метке
+      # nodeName: minikube                          ### развернуть под на конкретный узел по имени узла - рабочий
+      # nodeSelector:                               ### развернуть под на конкретный узел по метке      - рабочий
       #   kubernetes.io/hostname: minikube-m02
-      nodeSelector: ### развернуть под на конкретный узел по пространству имён
-        kubernetes.io/metadata.name: argocd
-      # affinity:                                   ### развернуть под на конкретный узел по метке
+      # affinity:                                   ### развернуть под на конкретный узел по метке      - рабочий
       #   nodeAffinity:
       #     requiredDuringSchedulingIgnoredDuringExecution:
       #       nodeSelectorTerms:
@@ -27,6 +25,7 @@ spec:
       #               operator: In
       #               values:
       #                 - minikube-m02
+      # ---------- не рабочие варианты ----------
       # affinity:
       #   podAffinity:
       #     requiredDuringSchedulingIgnoredDuringExecution:
@@ -37,21 +36,15 @@ spec:
       #               values:
       #                 - argocd-application-controller
       #         topologyKey: kubernetes.io/hostname
-      # affinity:
-      #   podAntiAffinity:
-      #     preferredDuringSchedulingIgnoredDuringExecution:
-      #       - weight: 100
-      #         podAffinityTerm:
-      #           labelSelector:
-      #             matchLabels:
-      #               app.kubernetes.io/name: argocd-server
-      #           topologyKey: kubernetes.io/hostname
-      #       - weight: 5
-      #         podAffinityTerm:
-      #           labelSelector:
-      #             matchLabels:
-      #               app.kubernetes.io/part-of: argocd
-      #           topologyKey: kubernetes.io/hostname
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 75
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: argocd
+                topologyKey: kubernetes.io/hostname
       volumes:
         - name: containers-log
           hostPath:
