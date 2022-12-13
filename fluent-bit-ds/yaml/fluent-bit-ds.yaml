@@ -25,15 +25,6 @@ spec:
       #               operator: In
       #               values:
       #                 - minikube-m02
-      # affinity:                                   ### развернуть под на узлы в зоне по метке      - рабочий
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #         - matchExpressions:
-      #             - key: topology.kubernetes.io/zone
-      #               operator: In
-      #               values:
-      #                 - zone-2
       affinity: ### развернуть под на узлы в зоне по метке      - рабочий
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
