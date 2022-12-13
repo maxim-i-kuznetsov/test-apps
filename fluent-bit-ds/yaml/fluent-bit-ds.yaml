@@ -37,7 +37,7 @@ spec:
       #                 - argocd-application-controller
       #         topologyKey: kubernetes.io/hostname
       affinity:
-        podAntiAffinity:
+        podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - podAffinityTerm:
                 labelSelector:
