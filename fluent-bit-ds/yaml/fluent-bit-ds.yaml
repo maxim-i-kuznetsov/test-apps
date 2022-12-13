@@ -16,6 +16,8 @@ spec:
       # nodeName: minikube                          ### развернуть под на конкретный узел по имени узла
       # nodeSelector:                               ### развернуть под на конкретный узел по метке
       #   kubernetes.io/hostname: minikube-m02
+      nodeSelector: ### развернуть под на конкретный узел по пространству имён
+        kubernetes.io/metadata.name: argocd
       # affinity:                                   ### развернуть под на конкретный узел по метке
       #   nodeAffinity:
       #     requiredDuringSchedulingIgnoredDuringExecution:
@@ -25,16 +27,16 @@ spec:
       #               operator: In
       #               values:
       #                 - minikube-m02
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values:
-                      - argocd-application-controller
-              topologyKey: kubernetes.io/hostname
+      # affinity:
+      #   podAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchExpressions:
+      #             - key: app.kubernetes.io/name
+      #               operator: In
+      #               values:
+      #                 - argocd-application-controller
+      #         topologyKey: kubernetes.io/hostname
       # affinity:
       #   podAntiAffinity:
       #     preferredDuringSchedulingIgnoredDuringExecution:
