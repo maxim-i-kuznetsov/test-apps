@@ -38,13 +38,12 @@ spec:
       #         topologyKey: kubernetes.io/hostname
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 75
-              podAffinityTerm:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
                 labelSelector:
                   matchLabels:
                     kubernetes.io/metadata.name: argocd
-                topologyKey: kubernetes.io/hostname
+              topologyKey: kubernetes.io/hostname
       volumes:
         - name: containers-log
           hostPath:
