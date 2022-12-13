@@ -26,16 +26,25 @@ spec:
       #               values:
       #                 - minikube-m02
       # ---------- не рабочие варианты ----------
-      affinity:
-        podAntiAffinity:
+      affinity: ### развернуть под на конкретный узел по метке      - рабочий
+        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: NotIn
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/zone
+                    operator: In
                     values:
-                      - argocd-server
-              topologyKey: topology.kubernetes.io/zone
+                      - zone-2
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchExpressions:
+      #             - key: app.kubernetes.io/name
+      #               operator: NotIn
+      #               values:
+      #                 - argocd-server
+      #         topologyKey: topology.kubernetes.io/zone
       volumes:
         - name: containers-log
           hostPath:
