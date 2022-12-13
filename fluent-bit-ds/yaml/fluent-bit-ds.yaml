@@ -25,8 +25,16 @@ spec:
       #               operator: In
       #               values:
       #                 - minikube-m02
-      # ---------- не рабочие варианты ----------
-      affinity: ### развернуть под на конкретный узел по метке      - рабочий
+      # affinity:                                   ### развернуть под на узлы в зоне по метке      - рабочий
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: topology.kubernetes.io/zone
+      #               operator: In
+      #               values:
+      #                 - zone-2
+      affinity: ### развернуть под на узлы в зоне по метке      - рабочий
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
@@ -34,7 +42,8 @@ spec:
                   - key: topology.kubernetes.io/zone
                     operator: In
                     values:
-                      - zone-2
+                      - argocd-zone
+      # ---------- не рабочие варианты ----------
       # affinity:
       #   podAntiAffinity:
       #     requiredDuringSchedulingIgnoredDuringExecution:
