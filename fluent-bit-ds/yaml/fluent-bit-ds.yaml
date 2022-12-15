@@ -25,26 +25,26 @@ spec:
       #               operator: In
       #               values:
       #                 - minikube-m02
-      # affinity: ### развернуть под на узлы в зоне по метке      - рабочий
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #         - matchExpressions:
-      #             - key: topology.kubernetes.io/zone
-      #               operator: In
-      #               values:
-      #                 - argocd-zone
-      # ---------- не рабочие варианты ----------
-      affinity:
-        podAffinity:
+      affinity: ### развернуть под на узлы в зоне по метке      - рабочий
+        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/name
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/zone
                     operator: In
                     values:
-                      - argocd-server
-              topologyKey: topology.kubernetes.io/zone
+                      - argocd-zone
+      # ---------- не рабочие варианты ----------
+      # affinity:
+      #   podAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - labelSelector:
+      #           matchExpressions:
+      #             - key: app.kubernetes.io/name
+      #               operator: In
+      #               values:
+      #                 - argocd-server
+      #         topologyKey: topology.kubernetes.io/zone
       volumes:
         - name: containers-log
           hostPath:
