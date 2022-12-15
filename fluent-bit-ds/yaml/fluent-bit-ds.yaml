@@ -44,7 +44,7 @@ spec:
                     operator: In
                     values:
                       - argocd-server
-              topologyKey: kubernetes.io/hostname
+              topologyKey: topology.kubernetes.io/zone
       volumes:
         - name: containers-log
           hostPath:
