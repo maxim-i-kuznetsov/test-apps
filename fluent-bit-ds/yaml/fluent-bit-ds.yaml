@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluent-bit-ds
+  namespace: argocd
   labels:
     k8s-app: fluent-bit
 spec:
@@ -25,15 +26,15 @@ spec:
       #               operator: In
       #               values:
       #                 - minikube-m02
-      affinity: ### развернуть под на узлы в зоне по метке      - рабочий
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: topology.kubernetes.io/zone
-                    operator: In
-                    values:
-                      - argocd-zone
+      # affinity: ### развернуть под на узлы в зоне по метке      - рабочий
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: topology.kubernetes.io/zone
+      #               operator: In
+      #               values:
+      #                 - argocd-zone
       # ---------- не рабочие варианты ----------
       # affinity:
       #   podAntiAffinity:
