@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluent-bit-ds
-  namespace: argocd
   labels:
     k8s-app: fluent-bit
 spec:
@@ -36,16 +35,16 @@ spec:
       #               values:
       #                 - argocd-zone
       # ---------- не рабочие варианты ----------
-      # affinity:
-      #   podAntiAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       - labelSelector:
-      #           matchExpressions:
-      #             - key: app.kubernetes.io/name
-      #               operator: NotIn
-      #               values:
-      #                 - argocd-server
-      #         topologyKey: topology.kubernetes.io/zone
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - argocd-server
+              topologyKey: topology.kubernetes.io/zone
       volumes:
         - name: containers-log
           hostPath:
